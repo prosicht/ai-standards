@@ -48,7 +48,7 @@ npx prosicht init -t web
 # Landing projeleri için
 npx prosicht init -t landing
 ```
-### 3. Mevcut Projedeki Kuralları Güncelleme
+### 3. Mevcut Projedeki Kuralları Güncelleme
 Depodaki kurallar güncellendiğinde, projenizdeki AGENTS.md dosyasını en son sürüme çekmek için:
 
 ```
