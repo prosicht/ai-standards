@@ -2,7 +2,7 @@
    Pattern: full-bleed canvas, seeded points, pointer reactive, pulse rings.
    Deterministic: R replays the same field. Reduced motion draws one still frame. */
 
-import { createSim, el, fitCanvas, rng, token, alpha, clamp } from './engine.js';
+import { createSim, el, fitCanvas, rng, token, alpha, clamp } from '../core/engine.js';
 
 const SEED = 7;
 const PULSE_EVERY = 1.4;

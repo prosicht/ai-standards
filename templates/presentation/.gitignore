@@ -1,0 +1,4 @@
+# Local only: publish key and settings written by `npx prosicht publish`
+.prosicht/
+.DS_Store
+node_modules/

@@ -1,8 +1,8 @@
 /* akis (full): the topic-to-deck pipeline, one stage per → press.
    Pattern: kit flow diagram + sim.stages + caption that follows the stage. */
 
-import { createSim, el } from './engine.js';
-import { flow, reveal } from './kit.js';
+import { createSim, el } from '../core/engine.js';
+import { flow, reveal } from '../core/kit.js';
 
 const NODES = [
   { id: 'konu', label: 'Konu', sub: 'tek cümle', x: 80, y: 210 },

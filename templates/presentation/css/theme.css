@@ -2,7 +2,7 @@
    Light first: :root is the light palette every deck starts from. The dark
    variant is used only when scenes.js sets deck.theme = 'dark'.
    Keep every token name; shell.css and the kit read them. Canvas code reads
-   them with token('--accent') from sims/engine.js, so keep colours as hex. */
+   them with token('--accent') from js/core/engine.js, so keep colours as hex. */
 
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
 

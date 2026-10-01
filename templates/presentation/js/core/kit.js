@@ -1,4 +1,4 @@
-/* Ready-made sim components. Styles live in styles/shell.css under .kit-*.
+/* Ready-made sim components. Styles live in css/core/shell.css under .kit-*.
    CORE FILE: `npx prosicht update` overwrites it. Never edit it inside a deck;
    build anything missing inside your own sim file.
 
@@ -198,6 +198,7 @@ export function terminal(sim, { title = 'terminal', prompt = '$', cps = 42 } = {
   const caret = (textNode) => {
     body.querySelector('.kit-term-caret')?.remove();
     textNode?.after(el('i', { class: 'kit-term-caret', 'aria-hidden': 'true' }));
+    body.scrollTop = body.scrollHeight;
   };
 
   const finish = () => {
@@ -230,6 +231,7 @@ export function terminal(sim, { title = 'terminal', prompt = '$', cps = 42 } = {
       caret(job.cur);
       if (line.kind !== 'cmd') {
         job.cur.textContent = line.text;
+        body.scrollTop = body.scrollHeight;
         job.li += 1;
         job.cur = null;
         job.wait = line.delay ?? 0.1;

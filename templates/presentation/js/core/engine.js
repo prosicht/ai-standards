@@ -1,4 +1,4 @@
-/* Simulation runtime shared by every sims/<id>.js module.
+/* Simulation runtime shared by every js/sims/<id>.js module.
    CORE FILE: `npx prosicht update` overwrites it. Never edit it inside a deck.
 
    A sim module is `export default function mount(root, ctx)` and returns
@@ -94,7 +94,7 @@ function build(node, attrs, children) {
 export const el = (tag, attrs, children) => build(document.createElement(tag), attrs, children);
 export const svg = (tag, attrs, children) => build(document.createElementNS(SVG_NS, tag), attrs, children);
 
-/* Reads a design token from styles/theme.css, e.g. token('--accent'). */
+/* Reads a design token from css/theme.css, e.g. token('--accent'). */
 export function token(name, fallback = '') {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 }

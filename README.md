@@ -18,8 +18,8 @@ ai-standards/
 │   └── presentation/   # Etkileşimli, animasyonlu sunum altyapısı (klasör şablonu)
 │       ├── manifest.json   # CLI'nin indireceği dosya listesi (core / starter)
 │       ├── AGENTS.md       # AI talimatı: konudan sunuma iş akışı, sözleşmeler, kontrol listesi
-│       ├── index.html, app.js, sound.js, styles/shell.css, sims/engine.js, sims/kit.js  # çekirdek
-│       └── scenes.js, styles/theme.css, sources.md, sims/*.js  # örnek deste (başlangıç)
+│       ├── index.html, css/core/, js/core/       # çekirdek (giriş noktası, kabuk, motor)
+│       └── js/scenes.js, js/sims/, css/theme.css, css/sims/, assets/, sources.md  # örnek deste (başlangıç)
 ├── README.md           # Depo kullanım rehberi (Bu dosya)
 └── LICENSE
 ```
@@ -64,7 +64,7 @@ Depodaki kurallar güncellendiğinde, projenizdeki AGENTS.md dosyasını en son 
 ```
 npx prosicht update -t web
 ```
-`-t` verilmezse şablon, `AGENTS.md` başındaki `<!-- template: ... -->` etiketinden otomatik tespit edilir. Sunum klasörlerinde `update` yalnızca çekirdek dosyaları yeniler; `scenes.js`, `sims/`, `styles/theme.css` ve `sources.md` dokunulmadan kalır.
+`-t` verilmezse şablon, `AGENTS.md` başındaki `<!-- template: ... -->` etiketinden otomatik tespit edilir. Sunum klasörlerinde `update` yalnızca çekirdek dosyaları (`index.html`, `css/core/`, `js/core/`, `AGENTS.md`) yeniler; `js/scenes.js`, `js/sims/`, `css/theme.css`, `css/sims/`, `assets/` ve `sources.md` dokunulmadan kalır. Eski (1.x) klasör yapısındaki sunumlar `update` sırasında onayla yeni yapıya taşınır.
 
 ## Sunum Altyapısı
 Konu verildiğinde AI'ın animasyonlu, etkileşimli bir tarayıcı sunumu hazırlaması için kullanılır. Framework, derleme ve npm bağımlılığı yoktur; çıktı statik dosyalardır.
@@ -74,17 +74,22 @@ mkdir yeni-sunum && cd yeni-sunum
 npx prosicht init -t presentation
 python3 -m http.server 8000    # http://localhost:8000 adresinde örnek deste açılır
 ```
-Ardından AI aracına (Claude Code, Cursor vb.) tek cümle yeterlidir: *"KOBİ'ler için yapay zekâ konusunda 10 dakikalık sunum hazırla."* AI, `AGENTS.md` içindeki akışı izler: brief → araştırma (`sources.md`) → bölüm planı (`scenes.js`) → tema (`styles/theme.css`) → her bölüm için bir simülasyon (`sims/<id>.js`) → tarayıcıda kontrol.
+Ardından AI aracına (Claude Code, Cursor vb.) tek cümle yeterlidir: *"KOBİ'ler için yapay zekâ konusunda 10 dakikalık sunum hazırla."* AI, `AGENTS.md` içindeki akışı izler: brief → araştırma (`sources.md`) → bölüm planı (`js/scenes.js`) → tema (`css/theme.css`) → her bölüm için bir simülasyon (`js/sims/<id>.js`) → tarayıcıda kontrol.
 
-Sunumlar varsayılan olarak **açık tonlarda** hazırlanır. Koyu tema yalnızca açıkça istendiğinde kullanılır (`scenes.js` içinde `deck.theme = 'dark'`).
+Sunumlar varsayılan olarak **açık tonlarda** hazırlanır. Koyu tema yalnızca açıkça istendiğinde kullanılır (`js/scenes.js` içinde `deck.theme = 'dark'`).
 
 **Katmanlar:**
 | Katman | Dosyalar | Sahibi |
 |--------|----------|--------|
-| Kabuk | `index.html`, `app.js`, `sound.js`, `styles/shell.css` | Çekirdek: `update` ile yenilenir, sunum içinde elle değiştirilmez |
-| Simülasyon motoru | `sims/engine.js`, `sims/kit.js` | Çekirdek |
-| İçerik | `scenes.js`, `styles/theme.css`, `sources.md` | Sunuma ait |
-| Bölüm simülasyonları | `sims/<id>.js`, `sims/<id>.css` | Sunuma ait (her bölüm ayrı dosya, AI ajanları paralel çalışabilir) |
+| Giriş noktası ve kabuk | `index.html`, `js/core/app.js`, `js/core/sound.js`, `css/core/shell.css` | Çekirdek: `update` ile yenilenir, sunum içinde elle değiştirilmez |
+| Simülasyon motoru | `js/core/engine.js`, `js/core/kit.js` | Çekirdek |
+| İçerik | `js/scenes.js`, `css/theme.css`, `sources.md` | Sunuma ait |
+| Bölüm simülasyonları | `js/sims/<id>.js`, `css/sims/<id>.css` | Sunuma ait (her bölüm ayrı dosya, AI ajanları paralel çalışabilir) |
+| Dosyalar | `assets/` (görseller, fontlar, veri, medya) | Sunuma ait |
+
+Yapı statik bir site çıktısı gibidir: `index.html` tek giriş noktasıdır, yüklediği her şey `css/`, `js/` ve `assets/` altındadır. Tüm yollar görelidir (`/` ile başlamaz).
+
+**Yayınlama:** deck.prosicht.com'da hesap açıp "Yeni sunum ekle" ile 32 karakterlik bir key alın, sunum klasöründe `npx prosicht publish` çalıştırın. Yalnızca `index.html`, `css/`, `js/` ve `assets/` yüklenir; link terminalde verilir. Gizlilik (yalnızca ben / bağlantıya sahip herkes) panelden ayarlanır.
 
 **Sunum sırasında:** `→`/`Space` ileri (önce bölüm içi adımlar), `←` geri, `O` bölümler, `N` notlar, `S` kaynak, `V` sunucu görünümü (ayrı pencere, senkron), `R` baştan, `P` duraklat, `B` karart, `F` tam ekran, `M` ses, `H` tüm kısayollar.
 ## Şablon Ekleme ve Güncelleme Kuralları (Maintainer'lar İçin)
@@ -92,7 +97,7 @@ Token Verimliliği: Şablon dosyaları (templates/*.md) yazılırken AI modeller
 
 Uyum: Yeni bir framework veya araç kuralı ekleneceğinde, tüm ekibin ortak kararı ile eklenmeli ve ilgili .md dosyasına PR (Pull Request) açılarak birleştirilmelidir.
 
-Sunum Altyapısı: `templates/presentation/` altına dosya eklenir veya silinirse `manifest.json` güncellenmelidir. `core` listesi `update` ile her projede ezilir; `starter` listesi yalnızca `init` sırasında ve dosya yoksa yazılır. Çekirdekte davranış değiştiğinde `manifest.json` içindeki `version` ile `app.js` içindeki `KIT_VERSION` birlikte artırılır.
+Sunum Altyapısı: `templates/presentation/` altına dosya eklenir veya silinirse `manifest.json` güncellenmelidir. `core` listesi `update` ile her projede ezilir; `starter` listesi yalnızca `init` sırasında ve dosya yoksa yazılır. Çekirdekte davranış değiştiğinde `manifest.json` içindeki `version` ile `js/core/app.js` içindeki `KIT_VERSION` birlikte artırılır; klasör yapısı değişirse `layout` da artırılır ve CLI'ye taşıma eklenir.
 
 Yerel Test: Şablonları push etmeden denemek için `templates/` klasörünü yerelde sunup CLI'yi o adrese yönlendirin:
 ```bash

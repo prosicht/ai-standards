@@ -2,15 +2,15 @@
    switch and the cards can be clicked too.
    Pattern: kit segmented + sim.stages driving one selected item. */
 
-import { createSim, el } from './engine.js';
-import { segmented } from './kit.js';
+import { createSim, el } from '../core/engine.js';
+import { segmented } from '../core/kit.js';
 
 const LAYERS = [
   {
     id: 'kabuk',
     name: 'Kabuk',
     role: 'Gezinme, geçişler, ölçekleme, notlar ve sunucu görünümü.',
-    files: ['index.html', 'app.js', 'sound.js', 'styles/shell.css'],
+    files: ['index.html', 'js/core/app.js', 'js/core/sound.js', 'css/core/shell.css'],
     owner: 'çekirdek · update yeniler',
     core: true,
   },
@@ -18,7 +18,7 @@ const LAYERS = [
     id: 'icerik',
     name: 'İçerik',
     role: 'Bölüm sırası, başlıklar, notlar, kaynaklar ve renkler.',
-    files: ['scenes.js', 'styles/theme.css', 'sources.md'],
+    files: ['js/scenes.js', 'css/theme.css', 'sources.md'],
     owner: 'sunuma ait · update dokunmaz',
     core: false,
   },
@@ -26,7 +26,7 @@ const LAYERS = [
     id: 'sim',
     name: 'Simülasyon',
     role: 'Her bölümün canlı kısmı. mount(root, ctx) sözleşmesine uyar.',
-    files: ['sims/<id>.js', 'sims/<id>.css', 'sims/engine.js', 'sims/kit.js'],
+    files: ['js/sims/<id>.js', 'css/sims/<id>.css', 'js/core/engine.js', 'js/core/kit.js'],
     owner: 'bölümler sunuma ait · engine ve kit çekirdek',
     core: false,
   },

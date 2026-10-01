@@ -1,5 +1,5 @@
-/* Deck content. DECK-OWNED: replace this demo with the real presentation.
-   Schema and rules: AGENTS.md, "scenes.js schema".
+/* Deck content (js/scenes.js). DECK-OWNED: replace this demo with the real presentation.
+   Schema and rules: AGENTS.md, "js/scenes.js Schema".
 
    This demo deck explains the kit itself; each chapter shows one sim pattern:
      intro      hero        canvas ambient field, pointer reactive
@@ -56,7 +56,7 @@ export const scenes = [
     layout: 'split',
     notes: [
       'Çekirdek dosyalar prosicht update ile yenilenir, sunum içinde elle değiştirilmez.',
-      'Sunuma özel her şey scenes.js, theme.css ve sims/ altında.',
+      'Sunuma özel her şey js/scenes.js, css/theme.css ve js/sims/ altında.',
     ],
   },
   {
@@ -76,12 +76,13 @@ export const scenes = [
     name: 'Kullanım',
     kicker: 'Kullanım',
     title: 'İki komut, bir *cümle*.',
-    lede: 'prosicht init ile altyapıyı indir, sonra AI aracına konuyu söyle. → her adımı yazdırır.',
+    lede: 'init ile altyapıyı indir, AI aracına konuyu söyle, publish ile yayınla. → her adımı yazdırır.',
     layout: 'full',
     notes: [
       'init sorusu: Uygulama mı, Sunum mu?',
       'Sunum seçilince bu klasör olduğu gibi iner, örnek deste hemen çalışır.',
       'update yalnızca çekirdek dosyaları yeniler; içerik dokunulmadan kalır.',
+      'publish için key deck.prosicht.com panelinde "Yeni sunum ekle" ile alınır.',
     ],
   },
   {

@@ -1,6 +1,6 @@
 /* Shell, layouts and kit component styles.
    CORE FILE: `npx prosicht update` overwrites it. Colours and fonts come from
-   styles/theme.css (deck-owned); change the look there, not here. */
+   css/theme.css (deck-owned); change the look there, not here. */
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }

@@ -2,8 +2,8 @@
    Pattern: kit sliders + segmented driving a counter, bars and a timeline.
    No external data: every number is computed from the sliders. */
 
-import { createSim, el, fmt } from './engine.js';
-import { slider, segmented, counter, bars } from './kit.js';
+import { createSim, el, fmt } from '../core/engine.js';
+import { slider, segmented, counter, bars } from '../core/kit.js';
 
 const OPENING = 1;
 const CLOSING = 1;

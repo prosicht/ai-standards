@@ -1,9 +1,10 @@
 /* baslat (full): from an empty folder to a running deck, one stage per →.
    Pattern: kit terminal typed per stage + a side panel that follows it.
-   The AI run in stage 3 is illustrative and labelled as such on screen. */
+   The AI run in stage 3 and the deck id in stage 4 are illustrative and
+   labelled as such on screen. */
 
-import { createSim, el } from './engine.js';
-import { terminal, reveal } from './kit.js';
+import { createSim, el } from '../core/engine.js';
+import { terminal, reveal } from '../core/kit.js';
 
 const STAGES = [
   [
@@ -13,28 +14,30 @@ const STAGES = [
   ],
   [
     { kind: 'dim', text: '[Pro Sicht] Sunum altyapisi indiriliyor...' },
-    { kind: 'ok', text: '  + AGENTS.md' },
-    { kind: 'ok', text: '  + index.html  app.js  sound.js' },
-    { kind: 'ok', text: '  + sims/engine.js  sims/kit.js' },
-    { kind: 'ok', text: '  + scenes.js  styles/theme.css  sources.md' },
-    { kind: 'out', text: 'Basarili: 20 dosya yazildi (Sunum altyapisi v1.1.0).' },
+    { kind: 'ok', text: '  + AGENTS.md  index.html' },
+    { kind: 'ok', text: '  + js/core/  app.js  engine.js  kit.js  sound.js' },
+    { kind: 'ok', text: '  + css/core/shell.css  css/theme.css' },
+    { kind: 'ok', text: '  + js/scenes.js  js/sims/  sources.md' },
+    { kind: 'out', text: 'Basarili: 22 dosya yazildi (Sunum altyapisi v2.0.0).' },
   ],
   [
     { kind: 'cmd', text: 'claude "KOBİ’ler için yapay zekâ, 10 dakikalık sunum hazırla"' },
     { kind: 'accent', text: '● brief: KOBİ sahipleri · 10 dk · Türkçe' },
-    { kind: 'accent', text: '● 8 bölüm planlandı → scenes.js, sources.md' },
-    { kind: 'accent', text: '● 8 simülasyon yazıldı → sims/' },
+    { kind: 'accent', text: '● 8 bölüm planlandı → js/scenes.js, sources.md' },
+    { kind: 'accent', text: '● 8 simülasyon yazıldı → js/sims/' },
     { kind: 'ok', text: '✓ kontrol: 8/8 bölüm açıldı, konsol temiz' },
   ],
   [
-    { kind: 'cmd', text: 'python3 -m http.server 8000' },
-    { kind: 'dim', text: 'Serving HTTP on :: port 8000 ...' },
-    { kind: 'ok', text: '→ http://localhost:8000' },
+    { kind: 'cmd', text: 'npx prosicht publish' },
+    { kind: 'out', text: '? Ne yayinlamak istiyorsunuz? › Sunum' },
+    { kind: 'out', text: '? Yayin adresi › deck.prosicht.com' },
+    { kind: 'out', text: '? Lutfen keyi giriniz › ********************************' },
+    { kind: 'ok', text: 'Yayinlandi: https://deck.prosicht.com/v/k3x9p2m7qa' },
   ],
 ];
 
-const CORE = ['AGENTS.md', 'index.html', 'app.js', 'sound.js', 'sims/engine.js', 'sims/kit.js', 'styles/shell.css'];
-const DECK = ['scenes.js', 'styles/theme.css', 'sources.md', 'sims/<bölüm>.js'];
+const CORE = ['AGENTS.md', 'index.html', 'js/core/app.js', 'js/core/engine.js', 'js/core/kit.js', 'js/core/sound.js', 'css/core/shell.css'];
+const DECK = ['js/scenes.js', 'css/theme.css', 'sources.md', 'js/sims/<bölüm>.js'];
 
 export const css = true;
 
@@ -50,8 +53,8 @@ export default function mount(root, ctx) {
   ]));
   const empty = el('p', { class: 'bs-empty', text: 'Klasör boş.' });
   const ready = el('div', { class: 'bs-ready' }, [
-    el('span', { class: 'ui-label', text: 'Hazır' }),
-    el('span', { class: 'bs-url', text: 'localhost:8000' }),
+    el('span', { class: 'ui-label', text: 'Yayında' }),
+    el('span', { class: 'bs-url', text: 'deck.prosicht.com/v/k3x9p2m7qa' }),
   ]);
   const tree = el('div', { class: 'bs-tree' }, [
     el('p', { class: 'ui-label', text: 'Çekirdek · update yeniler' }),

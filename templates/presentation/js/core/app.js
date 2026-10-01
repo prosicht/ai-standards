@@ -3,12 +3,17 @@
 
    Owns routing (#chapter-id), keys, transitions, sim mounting and fitting, the
    chapter overview, the notes / source / help drawer, the presenter window,
-   sound, pause and blackout. Content comes from scenes.js; each chapter's live
-   part from sims/<id>.js. The contract between them is AGENTS.md. */
+   sound, pause and blackout. Content comes from js/scenes.js; each chapter's
+   live part from js/sims/<id>.js (+ css/sims/<id>.css). The contract between
+   them is AGENTS.md.
+
+   Published decks run inside a CSP sandbox (opaque origin): no storage, no
+   BroadcastChannel between windows, and a <base href> injected by the server.
+   Everything here degrades accordingly. */
 
 import { createSound } from './sound.js';
 
-const KIT_VERSION = '1.1.0';
+const KIT_VERSION = '2.0.0';
 
 /* ----------------------------------------------------------------- strings */
 
@@ -36,8 +41,8 @@ const STRINGS = {
     step: 'adım',
     timerHint: 'Sıfırlamak için tıkla',
     waiting: 'Ana sunum penceresi bekleniyor…',
-    scenesError: 'scenes.js yüklenemedi',
-    scenesEmpty: 'scenes.js içinde bölüm yok',
+    scenesError: 'js/scenes.js yüklenemedi',
+    scenesEmpty: 'js/scenes.js içinde bölüm yok',
     kit: 'Altyapı sürümü',
     keys: [
       ['→  Space', 'İleri: önce bölüm içi adımlar, sonra sıradaki bölüm'],
@@ -81,8 +86,8 @@ const STRINGS = {
     step: 'step',
     timerHint: 'Click to reset',
     waiting: 'Waiting for the main deck window…',
-    scenesError: 'Could not load scenes.js',
-    scenesEmpty: 'scenes.js has no chapters',
+    scenesError: 'Could not load js/scenes.js',
+    scenesEmpty: 'js/scenes.js has no chapters',
     kit: 'Kit version',
     keys: [
       ['→  Space', 'Forward: steps inside the chapter first, then the next chapter'],
@@ -155,7 +160,7 @@ const LAYOUTS = new Set(['hero', 'split', 'split-flip', 'full', 'text']);
 function validate(list) {
   const seen = new Set();
   list.forEach((s, i) => {
-    const where = `scenes.js scenes[${i}]`;
+    const where = `js/scenes.js scenes[${i}]`;
     if (!s || typeof s !== 'object') { console.warn(`${where} is not an object`); return; }
     if (!s.id) console.warn(`${where}: id is missing`);
     else if (!/^[a-z0-9-]+$/.test(s.id)) console.warn(`${where}: id "${s.id}" must use a-z, 0-9 and - only`);
@@ -189,14 +194,14 @@ let deck = {};
 let scenes = [];
 let loadError = null;
 try {
-  const mod = await import('./scenes.js');
+  const mod = await import('../scenes.js');
   deck = mod.deck && typeof mod.deck === 'object' ? mod.deck : {};
   const list = Array.isArray(mod.scenes) ? mod.scenes : [];
   validate(list);
   scenes = list.map(normalize);
 } catch (error) {
   loadError = error;
-  console.error('[deck] scenes.js:', error);
+  console.error('[deck] js/scenes.js:', error);
 }
 
 const lang = STRINGS[deck.lang] ? deck.lang : 'tr';
@@ -213,9 +218,25 @@ const indexOf = (target) => {
 
 /* ------------------------------------------------------------------ channel */
 
-/* Main window and presenter window talk over a BroadcastChannel scoped to
-   this deck's path. */
-const channel = 'BroadcastChannel' in window ? new BroadcastChannel(`prosicht-deck:${location.pathname}`) : null;
+/* Main window and presenter window talk over two transports:
+   - postMessage between the deck and the presenter popup it opened (V). This
+     is the only one that works in a published deck: the CSP sandbox gives
+     every window its own opaque origin.
+   - a BroadcastChannel scoped to this deck's path, for a presenter tab opened
+     by hand while working locally.
+   State messages are idempotent, so receiving one twice is harmless; commands
+   are sent on exactly one transport. */
+const sandboxed = self.origin === 'null';
+const channel = !sandboxed && 'BroadcastChannel' in window ? new BroadcastChannel(`prosicht-deck:${location.pathname}`) : null;
+
+/* Calls handler(data) for messages from `peer()` (a window) or the channel. */
+function listen(peer, handler) {
+  channel?.addEventListener('message', (event) => handler(event.data || {}));
+  window.addEventListener('message', (event) => {
+    const from = peer();
+    if (from && event.source === from) handler(event.data || {});
+  });
+}
 
 /* ==================================================================== deck */
 
@@ -244,6 +265,7 @@ function startDeck() {
   let blackout = false;
   let drawerKind = null;
   let stageState = { index: 0, count: 0 };
+  let presenterWin = null;
 
   /* ---------------------------------------------------------------- sound */
 
@@ -309,11 +331,11 @@ function startDeck() {
     if (!simCache.has(scene.sim)) {
       simCache.set(scene.sim, (async () => {
         try {
-          const mod = await import(`./sims/${scene.sim}.js`);
+          const mod = await import(`../sims/${scene.sim}.js`);
           if (typeof mod.default !== 'function') {
             return { error: new Error('missing `export default function mount(root, ctx)`') };
           }
-          if (mod.css) await loadCss(`sims/${scene.sim}.css`);
+          if (mod.css) await loadCss(`css/sims/${scene.sim}.css`);
           return { mod };
         } catch (error) {
           /* Chrome, Firefox and Safari word a 404 on import() differently */
@@ -336,9 +358,9 @@ function startDeck() {
 
   function showEmpty(scene, error, missing = !error) {
     $('sim-empty-title').textContent = missing ? t.simMissing : t.simError;
-    $('sim-empty-note').textContent = missing ? `sims/${scene.sim}.js` : `sims/${scene.sim}.js: ${error.message || error}`;
+    $('sim-empty-note').textContent = missing ? `js/sims/${scene.sim}.js` : `js/sims/${scene.sim}.js: ${error.message || error}`;
     simEmpty.hidden = false;
-    console.error(`[deck] sims/${scene.sim}.js:`, error || t.simMissing);
+    console.error(`[deck] js/sims/${scene.sim}.js:`, error || t.simMissing);
   }
 
   function paintStages(i, count) {
@@ -425,7 +447,8 @@ function startDeck() {
     document.title = deck.title ? `${scene.name} · ${deck.title}` : scene.name;
     live.textContent = `${scene.n}/${scenes.length}: ${plain(scene.title)}`;
 
-    if (location.hash.slice(1) !== scene.id) history.replaceState(null, '', `#${scene.id}`);
+    /* absolute: a published deck has a <base href>, which a bare '#id' would resolve against */
+    if (location.hash.slice(1) !== scene.id) history.replaceState(null, '', `${location.pathname}${location.search}#${scene.id}`);
     paintStages(0, 0);
     if (drawerKind && !drawer.hidden) renderDrawer();
     overviewGrid.querySelectorAll('.ov-card').forEach((card, i) => {
@@ -508,6 +531,7 @@ function startDeck() {
     url.hash = '';
     const win = window.open(url.href, 'prosicht-presenter', 'popup,width=1120,height=720');
     if (!win) flash(t.popupBlocked);
+    else presenterWin = win;
   }
 
   /* -------------------------------------------------------------- drawer */
@@ -737,22 +761,21 @@ function startDeck() {
   /* ------------------------------------------------------------ presenter */
 
   function broadcast() {
-    channel?.postMessage({ type: 'state', index, stage: stageState, paused });
+    const msg = { type: 'state', index, stage: stageState, paused };
+    channel?.postMessage(msg);
+    if (presenterWin && !presenterWin.closed) presenterWin.postMessage(msg, '*');
   }
 
-  if (channel) {
-    channel.onmessage = (event) => {
-      const msg = event.data || {};
-      if (msg.type === 'hello') broadcast();
-      if (msg.type !== 'cmd') return;
-      if (msg.cmd === 'next') next();
-      else if (msg.cmd === 'prev') prev();
-      else if (msg.cmd === 'goto') goTo(msg.index);
-      else if (msg.cmd === 'reset') replay();
-      else if (msg.cmd === 'pause') setPaused(!paused);
-      else if (msg.cmd === 'black') setBlackout(!blackout);
-    };
-  }
+  listen(() => presenterWin, (msg) => {
+    if (msg.type === 'hello') broadcast();
+    if (msg.type !== 'cmd') return;
+    if (msg.cmd === 'next') next();
+    else if (msg.cmd === 'prev') prev();
+    else if (msg.cmd === 'goto') goTo(msg.index);
+    else if (msg.cmd === 'reset') replay();
+    else if (msg.cmd === 'pause') setPaused(!paused);
+    else if (msg.cmd === 'black') setBlackout(!blackout);
+  });
 
   /* ---------------------------------------------------------------- start */
 
@@ -777,10 +800,17 @@ function startPresenter() {
   const nextTitle = h('h2', 'pv-next-title');
   const nextName = h('p', 'pv-next-name');
 
+  /* commands go to the window that opened us, or over the channel when this
+     tab was opened by hand */
+  const send = (msg) => {
+    if (window.opener && !window.opener.closed) window.opener.postMessage(msg, '*');
+    else channel?.postMessage(msg);
+  };
+
   const control = (label, cmd) => {
     const b = h('button', 'pv-btn', label);
     b.type = 'button';
-    b.addEventListener('click', () => channel?.postMessage({ type: 'cmd', cmd }));
+    b.addEventListener('click', () => send({ type: 'cmd', cmd }));
     return b;
   };
 
@@ -820,16 +850,14 @@ function startPresenter() {
     nextName.textContent = upcoming ? `${pad(upcoming.n)} · ${upcoming.name}` : '';
   }
 
-  if (channel) {
-    channel.onmessage = (event) => { if (event.data?.type === 'state') render(event.data); };
-    channel.postMessage({ type: 'hello' });
-  }
+  listen(() => window.opener, (msg) => { if (msg.type === 'state') render(msg); });
+  send({ type: 'hello' });
 
   document.addEventListener('keydown', (event) => {
     const cmd = { ArrowRight: 'next', ' ': 'next', PageDown: 'next', ArrowLeft: 'prev', PageUp: 'prev', r: 'reset', p: 'pause', b: 'black' }[event.key];
     if (!cmd) return;
     event.preventDefault();
-    channel?.postMessage({ type: 'cmd', cmd });
+    send({ type: 'cmd', cmd });
   });
 }
 
