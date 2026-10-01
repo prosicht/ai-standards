@@ -1,0 +1,51 @@
+/* baslat: terminal left, folder panel right. */
+
+.bs { height: 100%; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 22px; }
+.bs .kit-term { min-height: 0; }
+.bs .kit-term-body { font-size: 17px; }
+.bs-panel { display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden; }
+.bs-title { margin: 0 0 4px; font-family: var(--font-display); font-size: 24px; font-weight: 700; }
+.bs-empty { margin: 0; color: var(--muted); font-family: var(--font-mono); font-size: 15px; }
+.bs-empty[hidden], .bs-tree[hidden], .bs-ready[hidden] { display: none; }
+.bs-tree { display: grid; gap: 8px; }
+.bs-tree .ui-label { margin: 6px 0 0; font-size: 12px; }
+.bs-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+.bs-file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: var(--bg-2);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--fg-soft);
+  transition: background .35s, color .35s;
+}
+.bs-file-name::before { content: '◇ '; color: var(--accent); }
+.bs-chips { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+.bs-chip {
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--bg-2);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  color: var(--fg-soft);
+}
+.bs-chip::before { content: '◆ '; color: var(--accent-2); }
+.bs-file-tag { font-size: 12px; color: var(--muted); }
+.bs-file.is-written { color: var(--fg); background: color-mix(in srgb, var(--accent) 12%, var(--bg-2)); }
+.bs-file.is-written .bs-file-tag { color: var(--accent); }
+.bs-ready {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--good) 50%, transparent);
+  background: color-mix(in srgb, var(--good) 10%, transparent);
+}
+.bs-url { font-family: var(--font-mono); font-size: 18px; color: var(--good); }

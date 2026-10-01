@@ -1,0 +1,17 @@
+/* akis: diagram on top, caption card below. */
+
+.ak {
+  height: 100%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 18px;
+}
+.ak-diagram { min-height: 0; }
+.ak-caption { display: grid; gap: 10px; padding: 18px 24px; }
+.ak-head { display: flex; align-items: center; gap: 14px; }
+.ak-num { font-family: var(--font-mono); font-size: 14px; color: var(--accent); }
+.ak-name { font-family: var(--font-display); font-size: 26px; font-weight: 700; }
+.ak-text { margin: 0; font-size: 19px; line-height: 1.45; color: var(--fg-soft); max-width: 80ch; }
+.ak-dots { margin-left: auto; display: flex; gap: 6px; }
+.ak-dots i { width: 22px; height: 4px; border-radius: 2px; background: var(--line); transition: background .3s; }
+.ak-dots i.on { background: var(--accent); }

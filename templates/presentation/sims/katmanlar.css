@@ -1,0 +1,80 @@
+/* katmanlar: switch on top, stacked layer cards below. */
+
+.kt { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 22px; }
+.kt-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.kt-stack { position: relative; display: grid; align-content: center; gap: 14px; }
+.kt-stack::before {
+  content: '';
+  position: absolute;
+  left: 39px;
+  top: 12%;
+  bottom: 12%;
+  width: 2px;
+  background: linear-gradient(var(--line), var(--accent), var(--line));
+  opacity: .5;
+}
+
+.kt-layer {
+  appearance: none;
+  position: relative;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 18px;
+  padding: 18px 20px 18px 14px;
+  text-align: left;
+  color: var(--fg);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+  opacity: .5;
+  transform: scale(.97);
+  transition: opacity .35s, transform .45s var(--ease-out), border-color .35s, background .35s;
+}
+.kt-layer:hover { opacity: .8; }
+.kt-layer.is-on {
+  opacity: 1;
+  transform: none;
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--panel));
+  box-shadow: 0 18px 50px rgb(0 0 0 / .3);
+}
+.kt-glyph {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--muted);
+  transition: background .35s, color .35s;
+}
+.kt-layer.is-on .kt-glyph { background: var(--accent); color: var(--on-accent); border-color: transparent; }
+.kt-layer.is-below .kt-glyph { color: var(--accent); }
+.kt-main { display: grid; gap: 6px; min-width: 0; }
+.kt-name { font-family: var(--font-display); font-size: 25px; font-weight: 700; line-height: 1.1; }
+.kt-role { font-size: 16px; color: var(--fg-soft); line-height: 1.4; }
+.kt-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height .45s var(--ease-out), opacity .3s, margin .3s;
+}
+.kt-layer.is-on .kt-files { max-height: 120px; opacity: 1; margin-top: 6px; }
+.kt-owner {
+  align-self: center;
+  max-width: 190px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+  text-align: right;
+}
+.kt-owner.is-core { color: var(--accent-2); }

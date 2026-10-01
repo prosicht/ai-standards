@@ -1,0 +1,70 @@
+<!doctype html>
+<!-- CORE FILE: `npx prosicht update` overwrites it. Deck content lives in scenes.js. -->
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sunum</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles/theme.css">
+<link rel="stylesheet" href="styles/shell.css">
+</head>
+<body>
+
+<div class="backdrop" aria-hidden="true"></div>
+
+<main class="stage" id="stage" data-layout="split">
+  <header class="head" id="head">
+    <p class="kicker"><span class="kicker-num" id="kicker-num"></span><span class="kicker-text" id="kicker-text"></span></p>
+    <h1 class="title" id="title"></h1>
+    <p class="lede" id="lede"></p>
+  </header>
+  <section class="sim-area" id="sim-area">
+    <div class="sim-host" id="sim-host"></div>
+    <div class="sim-empty" id="sim-empty" hidden>
+      <p class="sim-empty-title" id="sim-empty-title"></p>
+      <p class="sim-empty-note" id="sim-empty-note"></p>
+    </div>
+  </section>
+</main>
+
+<footer class="bar" id="bar">
+  <span class="bar-deck" id="bar-deck"></span>
+  <span class="bar-sep" aria-hidden="true"></span>
+  <span class="bar-num" id="bar-num"></span>
+  <span class="bar-name" id="bar-name"></span>
+  <span class="bar-stages" id="bar-stages" aria-hidden="true"></span>
+  <span class="bar-gap"></span>
+  <span class="bar-state" id="bar-state" hidden></span>
+  <button class="bar-btn" id="bar-prev" type="button" aria-label="Previous">&#8249;</button>
+  <span class="bar-count" id="bar-count"></span>
+  <button class="bar-btn" id="bar-next" type="button" aria-label="Next">&#8250;</button>
+  <button class="bar-btn bar-btn--key" id="bar-help" type="button"><kbd>H</kbd></button>
+  <span class="bar-progress" aria-hidden="true"><i id="bar-fill"></i></span>
+</footer>
+
+<nav class="overview" id="overview" hidden>
+  <div class="overview-head">
+    <h2 class="overview-title" id="overview-title"></h2>
+    <span class="overview-hint" id="overview-hint"></span>
+  </div>
+  <div class="overview-grid" id="overview-grid"></div>
+</nav>
+
+<aside class="drawer" id="drawer" hidden>
+  <header class="drawer-head">
+    <span class="drawer-eyebrow" id="drawer-eyebrow"></span>
+    <h2 class="drawer-title" id="drawer-title"></h2>
+    <button class="drawer-close" id="drawer-close" type="button"><kbd>Esc</kbd></button>
+  </header>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="blackout" id="blackout" aria-hidden="true"></div>
+<p class="sr-only" id="live" aria-live="polite"></p>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
