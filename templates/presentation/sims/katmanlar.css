@@ -38,7 +38,7 @@
   transform: none;
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 8%, var(--panel));
-  box-shadow: 0 18px 50px rgb(0 0 0 / .3);
+  box-shadow: var(--shadow);
 }
 .kt-glyph {
   display: grid;

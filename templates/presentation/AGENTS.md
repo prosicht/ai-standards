@@ -26,7 +26,7 @@ Work through these steps in order. Do not stop to ask unless the topic itself is
 2. **Research.** Collect facts, numbers, dates and quotes. Every number or claim that reaches the screen goes into `sources.md` with its URL and access date. NEVER invent statistics. Illustrative numbers must be labelled on screen ("temsili" / "illustrative").
 3. **Outline.** 6-12 chapters at ~1-1.5 min each. Arc: hook → stakes/problem → how it works → evidence → application/how-to → limits/objections → close on one takeaway. One idea per chapter. Write the outline table (id, layout, point, sim pattern) in `sources.md` BEFORE coding.
 4. **Start from the demo.** The kit ships a working demo deck. Read the demo sim for each pattern you need (section 9), then replace `scenes.js` and delete the demo sims you did not reuse.
-5. **Theme.** Rewrite `styles/theme.css` for the topic: surfaces, text, one leading accent, two supporting accents, fonts. Body text contrast ≥ 4.5:1 against `--bg`.
+5. **Theme.** Rewrite `styles/theme.css` for the topic: surfaces, text, one leading accent, two supporting accents, fonts. Decks are LIGHT by default (section 10): edit the light palette in `:root` and leave `deck.theme` unset. Contrast against `--bg`: body text and `--muted` ≥ 4.5:1, accent used in titles ≥ 3:1, `--on-accent` on `--accent` ≥ 4.5:1.
 6. **Content.** Write `scenes.js` (section 4).
 7. **Sims.** Write one sim per chapter except `text` layouts (sections 5-10). A sim must DEMONSTRATE the chapter's point (the audience understands something by watching or touching it); never decoration.
 8. **Verify.** Run the checklist in section 11 and fix every failure.
@@ -39,7 +39,7 @@ Work through these steps in order. Do not stop to ask unless the topic itself is
 export const deck = {
   title: 'Deck title',        // bar and browser tab
   lang: 'tr',                 // 'tr' | 'en': shell UI language and number format
-  theme: 'dark',              // optional; 'light' uses :root[data-theme="light"] in theme.css
+  // theme: 'dark',           // omit: decks are light by default. Set 'dark' only when the user asks for it
 };
 
 export const scenes = [
@@ -148,7 +148,8 @@ Choose the pattern by the SHAPE of the chapter's idea. Demo files are the refere
 
 ## 10. Visual and Motion Rules
 - On screen: titles ≤ 7 words, lede ≤ 2 sentences, sim labels ≥ 13px, sim body text ≥ 16px, key numbers huge (`ui-big`). What the presenter says goes into `notes`, not onto the slide.
-- Colour: theme tokens only (`var(--accent)`, `token()` for canvas). One leading accent per chapter, at most three meaningful colours per sim. Keep accent tokens as hex (`alpha()` needs hex).
+- Light first: every deck uses light tones unless the user explicitly asks for a dark presentation. Backgrounds, panels, cards, terminals and canvases stay light (`--bg`, `--panel`, `--term-bg`); never paint a large dark surface inside a sim. Colour comes from the accents, not from dark blocks.
+- Colour: theme tokens only (`var(--accent)`, `token()` for canvas); never hard-code colours or `rgb(0 0 0 / …)` shadows (use `var(--shadow)`). One leading accent per chapter, at most three meaningful colours per sim. Keep accent tokens as hex (`alpha()` needs hex).
 - Motion carries meaning: entrances 300-700ms ease-out, stage transitions ≤ 900ms, ambient loops slow (period ≥ 2s) and subtle. Nothing flashes.
 - Every sim has a meaningful first frame (shown instantly under reduced motion) and survives P (pause) and R (reset).
 - Interaction is optional: the presenter must be able to deliver every chapter with → alone.

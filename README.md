@@ -76,6 +76,8 @@ python3 -m http.server 8000    # http://localhost:8000 adresinde örnek deste a�
 ```
 Ardından AI aracına (Claude Code, Cursor vb.) tek cümle yeterlidir: *"KOBİ'ler için yapay zekâ konusunda 10 dakikalık sunum hazırla."* AI, `AGENTS.md` içindeki akışı izler: brief → araştırma (`sources.md`) → bölüm planı (`scenes.js`) → tema (`styles/theme.css`) → her bölüm için bir simülasyon (`sims/<id>.js`) → tarayıcıda kontrol.
 
+Sunumlar varsayılan olarak **açık tonlarda** hazırlanır. Koyu tema yalnızca açıkça istendiğinde kullanılır (`scenes.js` içinde `deck.theme = 'dark'`).
+
 **Katmanlar:**
 | Katman | Dosyalar | Sahibi |
 |--------|----------|--------|

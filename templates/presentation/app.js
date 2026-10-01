@@ -8,7 +8,7 @@
 
 import { createSound } from './sound.js';
 
-const KIT_VERSION = '1.0.0';
+const KIT_VERSION = '1.1.0';
 
 /* ----------------------------------------------------------------- strings */
 

@@ -17,7 +17,7 @@ const STAGES = [
     { kind: 'ok', text: '  + index.html  app.js  sound.js' },
     { kind: 'ok', text: '  + sims/engine.js  sims/kit.js' },
     { kind: 'ok', text: '  + scenes.js  styles/theme.css  sources.md' },
-    { kind: 'out', text: 'Basarili: 20 dosya yazildi (Sunum altyapisi v1.0.0).' },
+    { kind: 'out', text: 'Basarili: 20 dosya yazildi (Sunum altyapisi v1.1.0).' },
   ],
   [
     { kind: 'cmd', text: 'claude "KOBİ’ler için yapay zekâ, 10 dakikalık sunum hazırla"' },

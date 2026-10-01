@@ -1,33 +1,36 @@
 /* Deck theme: colours and fonts. DECK-OWNED: rewrite it for each topic.
+   Light first: :root is the light palette every deck starts from. The dark
+   variant is used only when scenes.js sets deck.theme = 'dark'.
    Keep every token name; shell.css and the kit read them. Canvas code reads
-   them with token('--accent') from sims/engine.js. */
+   them with token('--accent') from sims/engine.js, so keep colours as hex. */
 
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* surfaces */
-  --bg: #0c0e13;
-  --bg-2: #12151c;
-  --panel: #191d26;
-  --line: rgb(236 239 244 / .12);
+  --bg: #f7f5f0;
+  --bg-2: #efebe3;
+  --panel: #ffffff;
+  --line: rgb(29 26 22 / .12);
+  --shadow: 0 18px 48px rgb(60 45 20 / .10);
 
-  /* text */
-  --fg: #eceff4;
-  --fg-soft: #b6bdca;
-  --muted: #7c8494;
+  /* text (contrast on --bg: fg 15.9, fg-soft 8.8, muted 5.4) */
+  --fg: #1d1a16;
+  --fg-soft: #4a443b;
+  --muted: #6b6458;
 
   /* accents: one leading colour, two supporting ones */
-  --accent: #ffb547;
-  --on-accent: #1a1206;
-  --accent-2: #66c7ff;
-  --accent-3: #b79cff;
+  --accent: #c4500f;
+  --on-accent: #ffffff;
+  --accent-2: #1f6fb5;
+  --accent-3: #6a4bc4;
 
   /* semantic */
-  --good: #5fd39a;
-  --warn: #ffcf5c;
-  --bad: #ff6b6b;
+  --good: #1d7f52;
+  --warn: #9a6200;
+  --bad: #c23838;
 
   /* type */
   --font-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
@@ -37,25 +40,26 @@
   --title-tracking: -.03em;
 
   --radius: 16px;
-  --term-bg: #08090d;
+  --term-bg: #fffdf9;
 }
 
-/* Optional light variant: set deck.theme = 'light' in scenes.js. */
-:root[data-theme="light"] {
-  color-scheme: light;
-  --bg: #f6f3ec;
-  --bg-2: #efeae0;
-  --panel: #fffdf8;
-  --line: rgb(28 24 18 / .12);
-  --fg: #1c1812;
-  --fg-soft: #4a4339;
-  --muted: #857c6e;
-  --accent: #e2711d;
-  --on-accent: #fff8ef;
-  --accent-2: #1f7acc;
-  --accent-3: #7a4fd6;
-  --good: #2f9e6a;
-  --warn: #c98a0b;
-  --bad: #d64545;
-  --term-bg: #fbf8f1;
+/* Dark variant: only when the user asks for it (deck.theme = 'dark'). */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0c0e13;
+  --bg-2: #12151c;
+  --panel: #191d26;
+  --line: rgb(236 239 244 / .12);
+  --shadow: 0 24px 64px rgb(0 0 0 / .35);
+  --fg: #eceff4;
+  --fg-soft: #b6bdca;
+  --muted: #7c8494;
+  --accent: #ffb547;
+  --on-accent: #1a1206;
+  --accent-2: #66c7ff;
+  --accent-3: #b79cff;
+  --good: #5fd39a;
+  --warn: #ffcf5c;
+  --bad: #ff6b6b;
+  --term-bg: #08090d;
 }
