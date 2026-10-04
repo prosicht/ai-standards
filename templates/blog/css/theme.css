@@ -1,0 +1,73 @@
+/* Post theme: colours, fonts and text measure. POST-OWNED: rewrite it for each post.
+   Light first: :root is the light palette every post starts from. The dark
+   variant is used only when js/post.js sets post.theme = 'dark'.
+   Keep every token name; shell.css and the kit read them. Canvas code reads
+   them with token('--accent') from js/core/engine.js, so keep colours as hex. */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+:root {
+  color-scheme: light;
+
+  /* surfaces */
+  --bg: #fbf8f2;
+  --bg-2: #f1ebe0;
+  --panel: #ffffff;
+  --line: rgb(33 28 22 / .12);
+  --shadow: 0 18px 48px rgb(60 45 20 / .10);
+  --shadow-sm: 0 2px 10px rgb(60 45 20 / .06);
+
+  /* text (contrast on --bg: fg 16.5, fg-soft 9.2, muted 5.6) */
+  --fg: #1c1915;
+  --fg-soft: #4a433b;
+  --muted: #6b6357;
+
+  /* accents: one leading colour, two supporting ones (accent 5.4, accent-2 6.4, accent-3 4.9) */
+  --accent: #b93a1d;
+  --on-accent: #ffffff;
+  --accent-2: #1f5f8f;
+  --accent-3: #2f7a56;
+
+  /* semantic */
+  --good: #1d7f52;
+  --warn: #9a6200;
+  --bad: #c23838;
+
+  /* type: display for titles, body for reading, ui for captions and sims */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --title-weight: 700;
+  --title-tracking: -.025em;
+  --accent-style: italic;        /* *accent* words in titles: italic or normal */
+
+  /* layout */
+  --measure: 680px;              /* text column */
+  --wide: 1160px;                /* size: 'wide' figures */
+  --radius: 14px;
+  --radius-lg: 24px;
+  --term-bg: #fffdf9;
+}
+
+/* Dark variant: only when the user asks for it (post.theme = 'dark'). */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111214;
+  --bg-2: #191a1d;
+  --panel: #1d1f23;
+  --line: rgb(236 235 231 / .12);
+  --shadow: 0 24px 64px rgb(0 0 0 / .4);
+  --shadow-sm: 0 2px 12px rgb(0 0 0 / .3);
+  --fg: #ecebe7;
+  --fg-soft: #bdb8ae;
+  --muted: #8f897e;
+  --accent: #ff8a5c;
+  --on-accent: #1a0d06;
+  --accent-2: #7cc4ff;
+  --accent-3: #7fd6a8;
+  --good: #5fd39a;
+  --warn: #ffcf5c;
+  --bad: #ff6b6b;
+  --term-bg: #0c0d0f;
+}

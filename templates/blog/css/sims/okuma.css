@@ -1,0 +1,24 @@
+/* okuma: sliders left, result right; stacked on phones. */
+
+.ok { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+.ok-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: center; gap: 18px 26px; padding: 28px; border-right: 1px solid var(--line); background: var(--bg); }
+.ok-result { display: grid; align-content: center; gap: 22px; padding: 28px 32px; }
+.ok-total { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+.ok-total .ui-label { flex-basis: 100%; }
+.ok-total .ui-big { color: var(--accent); }
+.ok-total .ui-big small { font-size: .4em; color: var(--muted); letter-spacing: 0; }
+.ok-verdict { margin-left: auto; font-weight: 600; }
+.ok-verdict[data-tone="short"] { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, transparent); }
+.ok-verdict[data-tone="mid"] { color: var(--accent-2); border-color: color-mix(in srgb, var(--accent-2) 45%, transparent); }
+.ok-verdict[data-tone="long"] { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.ok-strip { display: flex; gap: 3px; height: 14px; margin-top: 4px; }
+.ok-seg { flex-basis: 0; min-width: 3px; border-radius: 4px; transition: flex-grow .6s var(--ease-out); }
+.ok-seg--text { background: var(--accent); }
+.ok-seg--images { background: var(--accent-2); }
+.ok-seg--figures { background: var(--accent-3); }
+
+@container sim (width < 720px) {
+  .ok { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .ok-controls { grid-template-columns: 1fr; gap: 10px; padding: 18px 20px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .ok-result { padding: 18px 20px; gap: 16px; }
+}

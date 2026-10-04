@@ -1,0 +1,53 @@
+/* akis: rail on top, caption card and terminal below; stacked on phones. */
+
+.ak { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 22px; padding: 26px 28px 28px; }
+
+.ak-rail { position: relative; padding-top: 4px; }
+.ak-track { position: absolute; left: calc(100% / 14); right: calc(100% / 14); top: 21px; height: 2px; background: var(--line); border-radius: 2px; }
+.ak-fill { display: block; height: 100%; background: var(--accent); border-radius: inherit; transform-origin: 0 50%; transform: scaleX(0); transition: transform .7s var(--ease-out); }
+.ak-nodes { position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.ak-node { display: grid; justify-items: center; gap: 8px; }
+.ak-dot {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  background: var(--panel);
+  color: var(--muted);
+  font: 700 14px/1 var(--font-ui);
+  transition: background .35s, border-color .35s, color .35s, transform .45s cubic-bezier(.3, 1.6, .5, 1);
+}
+.ak-label { font-size: 13.5px; font-weight: 600; color: var(--muted); transition: color .35s; white-space: nowrap; }
+.ak-node.is-done .ak-dot { border-color: var(--accent); color: var(--accent); }
+.ak-node.is-on .ak-dot { background: var(--accent); border-color: var(--accent); color: var(--on-accent); transform: scale(1.14); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 16%, transparent); }
+.ak-node.is-on .ak-label { color: var(--fg); }
+
+.ak-body { min-height: 0; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 22px; }
+.ak-card { align-self: center; display: grid; gap: 10px; justify-items: start; }
+.ak-card.is-swap > * { animation: ak-in .5s var(--ease-out) both; }
+.ak-card.is-swap > :nth-child(2) { animation-delay: .05s; }
+.ak-card.is-swap > :nth-child(3) { animation-delay: .1s; }
+.ak-card.is-swap > :nth-child(4) { animation-delay: .15s; }
+.ak-num { font: 500 13px/1 var(--font-mono); letter-spacing: .08em; color: var(--accent); }
+.ak-title { margin: 0; font: 700 clamp(24px, 4cqi, 32px)/1.15 var(--font-display); letter-spacing: -.01em; }
+.ak-text { margin: 0; max-width: 36ch; font-size: 16.5px; line-height: 1.55; color: var(--fg-soft); }
+.ak-file { font-family: var(--font-mono); font-size: 12.5px; }
+.ak .kit-term { min-height: 0; font-size: 14px; }
+.ak .kit-term-body { padding: 14px 16px; }
+
+@keyframes ak-in { from { opacity: 0; transform: translateY(10px); } }
+
+@container sim (width < 640px) {
+  .ak { padding: 18px 16px 16px; gap: 16px; }
+  .ak-label { display: none; }
+  .ak-node.is-on .ak-label { display: block; position: absolute; top: 40px; left: 50%; transform: translateX(-50%); }
+  .ak-node { position: relative; }
+  .ak-dot { width: 30px; height: 30px; font-size: 13px; }
+  .ak-track { top: 18px; }
+  .ak-body { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); margin-top: 18px; }
+  .ak-title { font-size: 22px; }
+  .ak-text { font-size: 15.5px; }
+  .ak .kit-term { font-size: 13px; }
+}

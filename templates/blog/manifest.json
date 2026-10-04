@@ -1,0 +1,34 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "layout": 2,
+  "description": "Interactive, animated blog post kit. index.html is the entry point; css/, js/ and assets/ hold everything it loads. Core files are refreshed by `prosicht update`; starter files are written once by `prosicht init` and then belong to the post. `prosicht publish` uploads index.html, css/, js/ and assets/ only.",
+  "core": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "index.html",
+    "css/core/shell.css",
+    "js/core/app.js",
+    "js/core/engine.js",
+    "js/core/kit.js"
+  ],
+  "starter": [
+    ".gitignore",
+    "sources.md",
+    "assets/.gitkeep",
+    "assets/images/demo/anatomi.svg",
+    "assets/images/demo/doku.svg",
+    "assets/images/demo/manzara-eskiz.svg",
+    "assets/images/demo/manzara.svg",
+    "assets/images/demo/palet.svg",
+    "css/theme.css",
+    "css/sims/akis.css",
+    "css/sims/kurulum.css",
+    "css/sims/okuma.css",
+    "js/post.js",
+    "js/sims/kapak.js",
+    "js/sims/akis.js",
+    "js/sims/kurulum.js",
+    "js/sims/okuma.js"
+  ]
+}
