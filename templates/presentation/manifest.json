@@ -1,6 +1,6 @@
 {
   "name": "presentation",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "layout": 2,
   "description": "Interactive, animated browser presentation kit. index.html is the entry point; css/, js/ and assets/ hold everything it loads. Core files are refreshed by `prosicht update`; starter files are written once by `prosicht init` and then belong to the deck. `prosicht publish` uploads index.html, css/, js/ and assets/ only.",
   "core": [

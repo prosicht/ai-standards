@@ -82,7 +82,7 @@ export const scenes = [
       'init sorusu: Uygulama mı, Sunum mu?',
       'Sunum seçilince bu klasör olduğu gibi iner, örnek deste hemen çalışır.',
       'update yalnızca çekirdek dosyaları yeniler; içerik dokunulmadan kalır.',
-      'publish için key deck.prosicht.com panelinde "Yeni sunum ekle" ile alınır.',
+      'publish için key deck.prosicht.com panelinde "Yeni ekle" → Sunum ile alınır.',
     ],
   },
   {
