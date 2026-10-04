@@ -186,7 +186,7 @@ Choose the pattern by the SHAPE of the chapter's idea. Demo files are the refere
 → / Space next (stages first) · ← back · Shift + → / ← whole chapter · O overview · N notes · S source · V presenter window (notes, next chapter, timer; stays in sync) · R replay · P pause · B black screen · F fullscreen · M sound · 1-9 jump · H help.
 
 ## 13. Publishing
-- `npx prosicht publish` uploads `index.html`, `css/`, `js/` and `assets/` to deck.prosicht.com and prints the link. The user creates the deck and its 32-character key in the panel ("Yeni sunum ekle"), and sets who can view it (private or anyone with the link) there.
+- `npx prosicht publish` uploads `index.html`, `css/`, `js/` and `assets/` to deck.prosicht.com and prints the link. The user creates the deck and its 32-character key in the panel ("Yeni ekle" → "Sunum"), and sets who can view it (private, anyone with the link, or link + password) there.
 - Limits: 50 MB in total, 25 MB per file, 500 files. Allowed types: `.html` (only `index.html`), `.css`, `.js`, `.mjs`, `.json`, `.svg`, `.png`, `.jpg`, `.jpeg`, `.webp`, `.avif`, `.gif`, `.ico`, `.woff`, `.woff2`, `.ttf`, `.otf`, `.mp4`, `.webm`, `.mp3`, `.wav`, `.ogg`, `.txt`, `.csv`, `.vtt`.
 - Published decks run in a CSP sandbox with an opaque origin. Inside it:
   - no `localStorage`, `sessionStorage`, IndexedDB or cookies (calls throw; the core already wraps its own);

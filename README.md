@@ -98,7 +98,7 @@ Sunumlar varsayılan olarak **açık tonlarda** hazırlanır. Koyu tema yalnızc
 
 Yapı statik bir site çıktısı gibidir: `index.html` tek giriş noktasıdır, yüklediği her şey `css/`, `js/` ve `assets/` altındadır. Tüm yollar görelidir (`/` ile başlamaz).
 
-**Yayınlama:** deck.prosicht.com'da hesap açıp "Yeni sunum ekle" ile 32 karakterlik bir key alın, sunum klasöründe `npx prosicht publish` çalıştırın. Yalnızca `index.html`, `css/`, `js/` ve `assets/` yüklenir; link terminalde verilir. Gizlilik (yalnızca ben / bağlantıya sahip herkes) panelden ayarlanır.
+**Yayınlama:** deck.prosicht.com'da hesap açıp **Yeni ekle** → **Sunum** ile 32 karakterlik bir key alın, sunum klasöründe `npx prosicht publish` çalıştırın. Yalnızca `index.html`, `css/`, `js/` ve `assets/` yüklenir; link terminalde verilir. Gizlilik (yalnızca ben / bağlantıya sahip herkes / şifreli bağlantı) panelden ayarlanır.
 
 **Sunum sırasında:** `→`/`Space` ileri (önce bölüm içi adımlar), `←` geri, `O` bölümler, `N` notlar, `S` kaynak, `V` sunucu görünümü (ayrı pencere, senkron), `R` baştan, `P` duraklat, `B` karart, `F` tam ekran, `M` ses, `H` tüm kısayollar.
 
@@ -134,7 +134,7 @@ Kabuk; okuma ilerleme çubuğunu, kalan okuma süresini, içindekiler tablosunu 
 | Figürler | `js/sims/<id>.js`, `css/sims/<id>.css` | Yazıya ait |
 | Dosyalar | `assets/` (görseller, fontlar, veri, medya) | Yazıya ait |
 
-Yazılar da varsayılan olarak **açık tonlarda** hazırlanır (koyu tema: `post.theme = 'dark'`). Yayınlama sunumla aynıdır: `npx prosicht publish` → **Blog**.
+Yazılar da varsayılan olarak **açık tonlarda** hazırlanır (koyu tema: `post.theme = 'dark'`). Yayınlama sunumla aynıdır; key panelde **Yeni ekle** → **Blog yazısı** ile alınır, sonra `npx prosicht publish` → **Blog**. Panel blog yazılarını sunumlardan ayrı türde tutar: sunum olarak yayınlanmış bir kaydın keyiyle blog yayınlanamaz.
 ## Şablon Ekleme ve Güncelleme Kuralları (Maintainer'lar İçin)
 Token Verimliliği: Şablon dosyaları (templates/*.md) yazılırken AI modellerinin token sınırları düşünülerek net, emir kipiyle yazılmış ve hiyerarşik Markdown formatı kullanılmalıdır.
 

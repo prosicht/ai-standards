@@ -221,7 +221,7 @@ Choose by the SHAPE of the idea. Demo files are the reference implementations; c
 9. Without a browser, at least run `node --check` on every JS file and state clearly that visual verification was not done.
 
 ## 13. Publishing
-- `npx prosicht publish` (choose **Blog**) uploads `index.html`, `css/`, `js/` and `assets/` to deck.prosicht.com and prints the link. The user creates the entry and its 32-character key in the panel ("Yeni sunum ekle"; posts and decks share the same entries) and sets who can view it (private or anyone with the link) there.
+- `npx prosicht publish` (choose **Blog**) uploads `index.html`, `css/`, `js/` and `assets/` to deck.prosicht.com and prints the link. The user creates the post and its 32-character key in the panel ("Yeni ekle" → "Blog yazısı") and sets who can view it (private, anyone with the link, or link + password) there. A key that already published a presentation cannot publish a post.
 - Limits: 50 MB in total, 25 MB per file, 500 files. Allowed types: `.html` (only `index.html`), `.css`, `.js`, `.mjs`, `.json`, `.svg`, `.png`, `.jpg`, `.jpeg`, `.webp`, `.avif`, `.gif`, `.ico`, `.woff`, `.woff2`, `.ttf`, `.otf`, `.mp4`, `.webm`, `.mp3`, `.wav`, `.ogg`, `.txt`, `.csv`, `.vtt`.
 - Published posts run in a CSP sandbox with an opaque origin. Inside it:
   - no `localStorage`, `sessionStorage`, IndexedDB or cookies (calls throw; the core never uses them);
