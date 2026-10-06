@@ -15,10 +15,16 @@ When asked to create a project from scratch, YOU MUST follow these steps BEFORE 
 2. Infrastructure First: Create a `docker-compose.yml` including PostgreSQL and required services. All services MUST start easily via `docker compose up -d`.
 3. Environment Variables: ALWAYS generate a `.env.example` file including:
    - `APP_PORT` (The application running port, e.g., 3000)
-   - `DATABASE_URL` (PostgreSQL connection string)
+   - `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, and `DB_PORT` in development only (see step 4).
    - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` & `TURNSTILE_SECRET_KEY`
    - All required third-party service keys.
    - `AI_ENCRYPTION_KEY` (only when the project has AI features; see §7). AI provider keys never go in `.env`.
+4. Database Connection: Enter the credentials once; never publish the database port on servers.
+   - NEVER hand-write a `DATABASE_URL` that repeats `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB`. Build it in one helper, `/src/lib/db/url.ts`: `postgres://<user>:<password>@<DB_HOST>:<DB_PORT>/<db>`, with user and password passed through `encodeURIComponent`. `DB_HOST` defaults to `127.0.0.1` and `DB_PORT` to `5432`. If `DATABASE_URL` is set (only for an external managed database such as RDS or Neon), the helper returns it as is.
+   - The app, worker, migrations, and ORM tooling config (`drizzle.config.ts` / `prisma.config.ts`) all get the URL from this helper.
+   - `docker-compose.yml` (servers): the database service has NO `ports:`. App and worker reach it over the compose network with `DB_HOST: db` and `DB_PORT: "5432"` in their `environment:`. Docker-published ports bypass host firewalls such as ufw.
+   - `docker-compose.dev.yml` (local development only): publishes the database on loopback, `127.0.0.1:${DB_PORT}:5432`, so `npm run dev` and tooling on the host can connect. Start it with `"db:up": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db"`. NEVER name it `docker-compose.override.yml`; Compose loads that file automatically, including on servers.
+   - `DB_PORT` exists only in the development `.env` and is unique per project on the developer machine (e.g., `5446`). Server `.env` files contain neither `DB_PORT` nor `DATABASE_URL`.
 
 ## 3. Code Conventions & Quality
 - Language: ALL variables, functions, classes, comments, and commit messages MUST be in English.
@@ -52,18 +58,21 @@ Adhere strictly to this modular folder structure:
 
 ## 7. AI Features
 Apply this section whenever an AI-powered feature is added (LLM chat, summarization, classification, extraction, vision, embeddings, speech, image generation), in new and existing projects.
-- Provider Choice: NEVER hardcode a single AI provider, model, or API key. The user picks the provider and model and enters their own key in the app's AI settings.
+- Configuration Owner (decide first): Before building AI settings, key storage, or any AI call, ASK the user: "Who configures AI in this system: each user or tenant admin with their own API keys, or a superadmin once for the whole platform?" Do NOT build until they answer, and record the answer in `README.md`.
+  - User / tenant admin: AI settings live in the user's or tenant's settings and are stored per tenant; each tenant uses its own key.
+  - Superadmin: AI settings live in a superadmin-only panel and are stored once for the platform; tenants never see the provider or key. Track AI usage per tenant and enforce limits so no tenant can run up the platform's bill.
+- Provider Choice: NEVER hardcode a single AI provider, model, or API key. The configuration owner picks the provider and model and enters the API key in the AI settings.
   - Text generation (including vision and structured output): offer Gemini, OpenAI, and Anthropic.
   - Other capabilities (embeddings, speech-to-text, text-to-speech, image generation, etc.): offer only providers that actually support the capability, and add the best-fit specialized providers as selectable options (e.g., Deepgram or ElevenLabs for speech).
 - Single AI Layer: Route every AI call through `/src/lib/ai`. Feature code NEVER imports a provider SDK directly. Use the Vercel AI SDK (`ai` with `@ai-sdk/google`, `@ai-sdk/openai`, `@ai-sdk/anthropic`, and the matching `@ai-sdk/*` package for any other provider). Pass provider-specific options only via `providerOptions` inside `/src/lib/ai`.
-- AI Settings Page: Admin-only (scoped per tenant/workspace in multi-tenant apps). For each capability the app uses, provide:
+- AI Settings Page: Visible only to the configuration owner. For each capability the app uses, provide:
   - Provider select and model select. Keep curated model options in one catalog file, `/src/lib/ai/models.ts`, and allow a custom model ID.
   - API key input using `PasswordInput` (§6).
   - A "Test connection" button that makes a minimal call with the entered key before saving.
 - Key Storage: Encrypt API keys at rest in PostgreSQL with AES-256-GCM using `AI_ENCRYPTION_KEY`. Decrypt only on the server at call time. NEVER send a saved key back to the client; show it masked (e.g., `••••1234`).
 - Structured Output: Define every expected AI response as a Zod schema and use the AI SDK's structured output. NEVER parse free-form model text with regex.
 - Unconfigured State: If a capability has no configured provider, the feature shows a clear prompt that links to AI settings instead of throwing.
-- Embeddings: Store the provider and model with every vector. Switching the embedding provider or model requires re-embedding existing data; warn the admin before saving that change.
+- Embeddings: Store the provider and model with every vector. Switching the embedding provider or model requires re-embedding existing data; warn the configuration owner before saving that change.
 
 ## 8. Versioning & Footer Display
 - The application MUST render a dynamic version string in the main Footer or Drawer Footer.
@@ -79,4 +88,4 @@ When suggesting git commands or creating branches, ALWAYS use these prefixes:
 
 ## 10. Documentation (README.md)
 - The `README.md` file MUST ALWAYS be kept up to date with architectural changes.
-- It MUST contain explicit, step-by-step instructions for setup: `.env` configuration, `docker compose up -d`, and `npm run dev`.
+- It MUST contain explicit, step-by-step instructions for setup: `.env` configuration, `npm run db:up` and `npm run dev` for local development, and `docker compose up -d` for servers.
