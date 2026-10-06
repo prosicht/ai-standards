@@ -44,6 +44,10 @@ Adhere strictly to this modular folder structure:
 ## 6. Security & Authentication
 - Bot Protection: Any screen or modal containing login, registration, password reset, or sensitive forms MUST integrate Cloudflare Turnstile.
 - Secret Key Isolation: Never expose secret keys to the client side. Ensure client-side env variables are prefixed strictly with `NEXT_PUBLIC_`.
+- Password Visibility Toggle: Every password field (login, registration, password reset, change password, confirm password) MUST have a show/hide icon button. Build it once as a reusable `PasswordInput` in `/src/components/ui` and use it everywhere; NEVER render a bare `<input type="password">`.
+  - Start hidden and toggle the input `type` between `password` and `text`, using the `Eye` / `EyeOff` icons from `lucide-react`.
+  - The toggle MUST be a `type="button"` element (it never submits the form), reachable by keyboard, with an `aria-label` that names the current action (e.g., "Show password" / "Hide password").
+  - Keep the correct `autoComplete` value (`current-password` or `new-password`) and the 44x44px touch target on mobile.
 
 ## 7. Versioning & Footer Display
 - The application MUST render a dynamic version string in the main Footer or Drawer Footer.
