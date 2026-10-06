@@ -30,6 +30,15 @@ Adhere to this file layout:
 - `/src/store` -> Zustand global state slices
 - `/src/lib` -> API client instances (Axios/Fetch), storage adapters
 
-## 5. Versioning & Git Conventions
+## 5. AI Features
+Apply this section whenever an AI-powered feature is added (LLM chat, summarization, classification, extraction, vision, speech, image generation).
+- Backend Only: NEVER call an AI provider directly from the app, and NEVER put an AI API key in `EXPO_PUBLIC_*` variables, app config, or device storage; anything in the app bundle is readable. Every AI call goes through the project's backend, which owns the provider layer and encrypted keys.
+- Provider Choice: NEVER hardcode a single AI provider or model. The user picks them in the app's AI settings.
+  - Text generation (including vision and structured output): offer Gemini, OpenAI, and Anthropic.
+  - Other capabilities (speech-to-text, text-to-speech, image generation, etc.): offer only providers that actually support the capability, and add the best-fit specialized providers as selectable options (e.g., Deepgram or ElevenLabs for speech).
+- AI Settings Screen: Admin-only. Per capability: provider and model pickers, a secure API key input, and a "Test connection" action. The key is sent once to the backend and never shown again in full (masked, e.g., `••••1234`).
+- Unconfigured State: If the backend reports that AI is not configured, show a clear prompt that leads to AI settings instead of a generic error.
+
+## 6. Versioning & Git Conventions
 - Display version string in app settings or profile footer: `v[Major].[Minor].[Patch].[YYMMDDHHMMSS]`.
 - Git Branch Prefixes: `feat/`, `fix/`, `chore/`.

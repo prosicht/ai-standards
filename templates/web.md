@@ -18,6 +18,7 @@ When asked to create a project from scratch, YOU MUST follow these steps BEFORE 
    - `DATABASE_URL` (PostgreSQL connection string)
    - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` & `TURNSTILE_SECRET_KEY`
    - All required third-party service keys.
+   - `AI_ENCRYPTION_KEY` (only when the project has AI features; see §7). AI provider keys never go in `.env`.
 
 ## 3. Code Conventions & Quality
 - Language: ALL variables, functions, classes, comments, and commit messages MUST be in English.
@@ -49,18 +50,33 @@ Adhere strictly to this modular folder structure:
   - The toggle MUST be a `type="button"` element (it never submits the form), reachable by keyboard, with an `aria-label` that names the current action (e.g., "Show password" / "Hide password").
   - Keep the correct `autoComplete` value (`current-password` or `new-password`) and the 44x44px touch target on mobile.
 
-## 7. Versioning & Footer Display
+## 7. AI Features
+Apply this section whenever an AI-powered feature is added (LLM chat, summarization, classification, extraction, vision, embeddings, speech, image generation), in new and existing projects.
+- Provider Choice: NEVER hardcode a single AI provider, model, or API key. The user picks the provider and model and enters their own key in the app's AI settings.
+  - Text generation (including vision and structured output): offer Gemini, OpenAI, and Anthropic.
+  - Other capabilities (embeddings, speech-to-text, text-to-speech, image generation, etc.): offer only providers that actually support the capability, and add the best-fit specialized providers as selectable options (e.g., Deepgram or ElevenLabs for speech).
+- Single AI Layer: Route every AI call through `/src/lib/ai`. Feature code NEVER imports a provider SDK directly. Use the Vercel AI SDK (`ai` with `@ai-sdk/google`, `@ai-sdk/openai`, `@ai-sdk/anthropic`, and the matching `@ai-sdk/*` package for any other provider). Pass provider-specific options only via `providerOptions` inside `/src/lib/ai`.
+- AI Settings Page: Admin-only (scoped per tenant/workspace in multi-tenant apps). For each capability the app uses, provide:
+  - Provider select and model select. Keep curated model options in one catalog file, `/src/lib/ai/models.ts`, and allow a custom model ID.
+  - API key input using `PasswordInput` (§6).
+  - A "Test connection" button that makes a minimal call with the entered key before saving.
+- Key Storage: Encrypt API keys at rest in PostgreSQL with AES-256-GCM using `AI_ENCRYPTION_KEY`. Decrypt only on the server at call time. NEVER send a saved key back to the client; show it masked (e.g., `••••1234`).
+- Structured Output: Define every expected AI response as a Zod schema and use the AI SDK's structured output. NEVER parse free-form model text with regex.
+- Unconfigured State: If a capability has no configured provider, the feature shows a clear prompt that links to AI settings instead of throwing.
+- Embeddings: Store the provider and model with every vector. Switching the embedding provider or model requires re-embedding existing data; warn the admin before saving that change.
+
+## 8. Versioning & Footer Display
 - The application MUST render a dynamic version string in the main Footer or Drawer Footer.
 - Format: `v[Major].[Minor].[Patch].[YYMMDDHHMMSS]` (e.g., `v1.3.4.261226034559`).
 - SemVer Rules: Major = Breaking changes, Minor = New features, Patch = Bug fixes.
 - Timestamp Injection: The `[YYMMDDHHMMSS]` timestamp MUST be generated dynamically during the pre-build or build step.
 
-## 8. Git & Branching Conventions
+## 9. Git & Branching Conventions
 When suggesting git commands or creating branches, ALWAYS use these prefixes:
 - `feat/feature-name` -> For new features.
 - `fix/issue-name` -> For bug fixes and patches.
 - `chore/task-name` -> For maintenance, dependency updates, or non-functional changes.
 
-## 9. Documentation (README.md)
+## 10. Documentation (README.md)
 - The `README.md` file MUST ALWAYS be kept up to date with architectural changes.
 - It MUST contain explicit, step-by-step instructions for setup: `.env` configuration, `docker compose up -d`, and `npm run dev`.
