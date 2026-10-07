@@ -15,6 +15,7 @@ When creating a mobile project from scratch:
 1. Safe Area Handling: Wrap layouts with `react-native-safe-area-context` to handle notches and device navigation bars.
 2. Color & Theme Strategy: Configure `tailwind.config.js` for NativeWind to support system dark/light modes smoothly.
 3. Environment Setup: Maintain `.env.example` with EXPO_PUBLIC_ prefixed environment variables.
+4. Superadmin: The backend owns the platform superadmin (seeded at startup; see the backend standards). Superadmin-only screens live in the web or backoffice admin panel, never in the app.
 
 ## 3. Code Conventions & Mobile Performance
 - Platform Consistency: Ensure component behavior works identically on iOS and Android. Use `Platform.OS` only when strict platform-specific UI is required.
