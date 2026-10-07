@@ -19,12 +19,18 @@ When asked to create a project from scratch, YOU MUST follow these steps BEFORE 
    - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` & `TURNSTILE_SECRET_KEY`
    - All required third-party service keys.
    - `AI_ENCRYPTION_KEY` (only when the project has AI features; see §7). AI provider keys never go in `.env`.
+   - `SUPERADMIN_EMAIL` & `SUPERADMIN_PASSWORD` (the initial superadmin; see step 5).
 4. Database Connection: Enter the credentials once; never publish the database port on servers.
    - NEVER hand-write a `DATABASE_URL` that repeats `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB`. Build it in one helper, `/src/lib/db/url.ts`: `postgres://<user>:<password>@<DB_HOST>:<DB_PORT>/<db>`, with user and password passed through `encodeURIComponent`. `DB_HOST` defaults to `127.0.0.1` and `DB_PORT` to `5432`. If `DATABASE_URL` is set (only for an external managed database such as RDS or Neon), the helper returns it as is.
    - The app, worker, migrations, and ORM tooling config (`drizzle.config.ts` / `prisma.config.ts`) all get the URL from this helper.
    - `docker-compose.yml` (servers): the database service has NO `ports:`. App and worker reach it over the compose network with `DB_HOST: db` and `DB_PORT: "5432"` in their `environment:`. Docker-published ports bypass host firewalls such as ufw.
    - `docker-compose.dev.yml` (local development only): publishes the database on loopback, `127.0.0.1:${DB_PORT}:5432`, so `npm run dev` and tooling on the host can connect. Start it with `"db:up": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db"`. NEVER name it `docker-compose.override.yml`; Compose loads that file automatically, including on servers.
    - `DB_PORT` exists only in the development `.env` and is unique per project on the developer machine (e.g., `5446`). Server `.env` files contain neither `DB_PORT` nor `DATABASE_URL`.
+5. Superadmin Seed: Every project with user accounts has a platform superadmin role, separate from user and tenant roles (e.g., `users.is_superadmin`). The app seeds it on every start, right after the migrations and under the same advisory lock, so app and worker never seed twice:
+   - If any superadmin exists, change nothing; NEVER reset its password or touch other accounts.
+   - Otherwise promote the account with `SUPERADMIN_EMAIL`, or create it with `SUPERADMIN_PASSWORD` (at least 12 characters) when no such account exists.
+   - If no superadmin exists and these variables are missing, startup fails with a clear error. NEVER log the password.
+   - `SUPERADMIN_PASSWORD` is read only when the account is created and can be removed from `.env` afterwards. Document the seed in `README.md`.
 
 ## 3. Code Conventions & Quality
 - Language: ALL variables, functions, classes, comments, and commit messages MUST be in English.
@@ -51,6 +57,7 @@ Adhere strictly to this modular folder structure:
 ## 6. Security & Authentication
 - Bot Protection: Any screen or modal containing login, registration, password reset, or sensitive forms MUST integrate Cloudflare Turnstile.
 - Secret Key Isolation: Never expose secret keys to the client side. Ensure client-side env variables are prefixed strictly with `NEXT_PUBLIC_`.
+- Superadmin Panel: Platform-wide settings (e.g., AI configured once for the platform, per-tenant limits) live in a separate admin panel (e.g., `/admin`) outside the user/tenant panel. Every page and server action there checks the superadmin role on the server, and the panel returns 404 to everyone else, signed in or not. The superadmin role is never granted through registration or any tenant screen.
 - Password Visibility Toggle: Every password field (login, registration, password reset, change password, confirm password) MUST have a show/hide icon button. Build it once as a reusable `PasswordInput` in `/src/components/ui` and use it everywhere; NEVER render a bare `<input type="password">`.
   - Start hidden and toggle the input `type` between `password` and `text`, using the `Eye` / `EyeOff` icons from `lucide-react`.
   - The toggle MUST be a `type="button"` element (it never submits the form), reachable by keyboard, with an `aria-label` that names the current action (e.g., "Show password" / "Hide password").

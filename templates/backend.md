@@ -19,18 +19,25 @@ When creating a backend service from scratch:
    - `JWT_ACCESS_SECRET` & `JWT_REFRESH_SECRET`
    - `CORS_ORIGIN`
    - `AI_ENCRYPTION_KEY` (only when the service has AI features; see §4). AI provider keys never go in `.env`.
+   - `SUPERADMIN_EMAIL` & `SUPERADMIN_PASSWORD` (the initial superadmin; see step 4).
 3. Database Connection: Enter the credentials once; never publish the database port on servers.
    - NEVER hand-write a `DATABASE_URL` that repeats `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB`. Build it in one helper, `/src/lib/db/url.ts`: `postgres://<user>:<password>@<DB_HOST>:<DB_PORT>/<db>`, with user and password passed through `encodeURIComponent`. `DB_HOST` defaults to `127.0.0.1` and `DB_PORT` to `5432`. If `DATABASE_URL` is set (only for an external managed database such as RDS or Neon), the helper returns it as is.
    - The service, workers, migrations, and ORM tooling config (`drizzle.config.ts` / `prisma.config.ts`) all get the URL from this helper.
    - `docker-compose.yml` (servers): the database service has NO `ports:`. The service reaches it over the compose network with `DB_HOST: db` and `DB_PORT: "5432"` in its `environment:`. Docker-published ports bypass host firewalls such as ufw.
    - `docker-compose.dev.yml` (local development only): publishes the database on loopback, `127.0.0.1:${DB_PORT}:5432`, so `npm run dev` and tooling on the host can connect. Start it with `"db:up": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db"`. NEVER name it `docker-compose.override.yml`; Compose loads that file automatically, including on servers.
    - `DB_PORT` exists only in the development `.env` and is unique per project on the developer machine (e.g., `5446`). Server `.env` files contain neither `DB_PORT` nor `DATABASE_URL`.
+4. Superadmin Seed: Every service with user accounts has a platform superadmin role, separate from user and tenant roles (e.g., `users.is_superadmin`). The service seeds it on every start, right after the migrations and under the same advisory lock, so parallel instances and workers never seed twice:
+   - If any superadmin exists, change nothing; NEVER reset its password or touch other accounts.
+   - Otherwise promote the account with `SUPERADMIN_EMAIL`, or create it with `SUPERADMIN_PASSWORD` (at least 12 characters) when no such account exists.
+   - If no superadmin exists and these variables are missing, startup fails with a clear error. NEVER log the password.
+   - `SUPERADMIN_PASSWORD` is read only when the account is created and can be removed from `.env` afterwards. Document the seed in `README.md`.
 
 ## 3. Security & Architecture Rules
 - JWT Auth: Secure protected endpoints with a dedicated Auth Middleware validating JWT tokens. Keep access tokens short-lived.
 - Input Validation: NEVER process request bodies, query params, or URL path parameters without validating them against Zod schemas.
 - Error Handling: Use a centralized Error Handling Middleware. Never leak raw database stack traces to API client responses.
 - Security Headers: Always initialize `helmet()`, configure strict `cors()`, and apply rate-limiting middleware to authentication routes.
+- Superadmin Endpoints: Platform-wide endpoints (e.g., AI configured once for the platform, per-tenant limits) require the superadmin role, checked against the database on every request rather than trusted from a token claim, and answer 404 to everyone else. The superadmin role is never granted through registration or any tenant endpoint.
 
 ## 4. AI Features
 Apply this section whenever an AI-powered feature is added (LLM chat, summarization, classification, extraction, vision, embeddings, speech, image generation), in new and existing services.
