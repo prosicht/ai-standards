@@ -11,10 +11,10 @@ Tüm projelerimizde kod kalitesini, mimari tutarlılığı ve geliştirme hızı
 ```text
 ai-standards/
 ├── templates/
-│   ├── web.md          # Next.js, Shadcn UI, Docker, Turnstile (Tam Donanımlı Web App)
+│   ├── web.md          # Next.js, Shadcn UI, Docker, Turnstile, panel tasarımı, sayfalama, MCP (Tam Donanımlı Web App)
 │   ├── landing.md      # Statik/Yarı-dinamik, SEO ve Hız Odaklı Landing Sayfaları
 │   ├── mobile.md       # React Native / Expo Mobil Uygulama Standartları
-│   ├── backend.md      # Microservice / Node.js / Express / NestJS API Standartları
+│   ├── backend.md      # Microservice / Node.js / Express / NestJS API Standartları, sayfalama, MCP
 │   ├── presentation/   # Etkileşimli, animasyonlu sunum altyapısı (klasör şablonu)
 │   │   ├── manifest.json   # CLI'nin indireceği dosya listesi (core / starter)
 │   │   ├── AGENTS.md       # AI talimatı: konudan sunuma iş akışı, sözleşmeler, kontrol listesi

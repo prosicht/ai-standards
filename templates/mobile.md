@@ -16,10 +16,12 @@ When creating a mobile project from scratch:
 2. Color & Theme Strategy: Configure `tailwind.config.js` for NativeWind to support system dark/light modes smoothly.
 3. Environment Setup: Maintain `.env.example` with EXPO_PUBLIC_ prefixed environment variables.
 4. Superadmin: The backend owns the platform superadmin (seeded at startup; see the backend standards). Superadmin-only screens live in the web or backoffice admin panel, never in the app.
+5. MCP: The backend hosts the MCP server (see the backend standards); the app never runs one. Every feature added to the app adds the MCP tools for its backend endpoints in the same change, without being asked.
 
 ## 3. Code Conventions & Mobile Performance
 - Platform Consistency: Ensure component behavior works identically on iOS and Android. Use `Platform.OS` only when strict platform-specific UI is required.
 - Performance: Avoid inline function definitions in list renders. Use `FlashList` (Shopify) instead of standard `FlatList` for heavy lists.
+- Mandatory Pagination: Every list backed by data that grows with use (records, messages, history, search results) loads page by page from a paginated backend endpoint: `onEndReached` fetches the next page, pull-to-refresh reloads the first page, and a footer spinner shows while loading. NEVER fetch the whole collection or cut it silently.
 - Touch Targets: Ensure all pressable areas (`TouchableOpacity`, `Pressable`) have at least 44x44dp hit surfaces using `hitSlop` when needed.
 - TypeScript: No `any` types. Provide interfaces for route params and API payloads.
 
