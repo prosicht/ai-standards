@@ -10,6 +10,7 @@
     "css/core/player.css",
     "js/core/app.js",
     "js/core/motion.js",
+    "js/core/player.js",
     "js/core/vendor/gsap.min.js"
   ],
   "starter": [
