@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video</title>
+  <link rel="stylesheet" href="css/core/player.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="js/core/vendor/gsap.min.js"></script>
+  <script type="module" src="js/core/app.js"></script>
+</head>
+<body>
+  <!-- The 1920×1080 stage. js/core/app.js fills it from js/film.js; the
+       data-* attributes make it a HyperFrames composition for `npx prosicht render`. -->
+  <div id="film" data-composition-id="film" data-start="0" data-width="1920" data-height="1080"></div>
+</body>
+</html>

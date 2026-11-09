@@ -1,0 +1,23 @@
+{
+  "name": "video",
+  "version": "1.0.0",
+  "layout": 2,
+  "description": "Motion-graphics video kit: a HyperFrames-compatible composition that plays in the browser with player controls and renders to MP4 with `npx prosicht render`. index.html is the entry point; css/, js/ and assets/ hold everything it loads. Core files are refreshed by `prosicht update`; starter files are written once by `prosicht init` and then belong to the film. `prosicht publish` uploads index.html, css/, js/ and assets/ only.",
+  "core": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "index.html",
+    "css/core/player.css",
+    "js/core/app.js",
+    "js/core/motion.js",
+    "js/core/player.js",
+    "js/core/vendor/gsap.min.js"
+  ],
+  "starter": [
+    ".gitignore",
+    "sources.md",
+    "assets/.gitkeep",
+    "css/theme.css",
+    "js/film.js"
+  ]
+}

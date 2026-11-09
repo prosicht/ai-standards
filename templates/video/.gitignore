@@ -1,0 +1,7 @@
+# Local only: publish key and settings written by `npx prosicht publish`
+.prosicht/
+.DS_Store
+node_modules/
+
+# MP4s rendered by `npx prosicht render` while checking (assets/video.mp4 is published)
+renders/
