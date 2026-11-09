@@ -20,11 +20,16 @@ ai-standards/
 │   │   ├── AGENTS.md       # AI talimatı: konudan sunuma iş akışı, sözleşmeler, kontrol listesi
 │   │   ├── index.html, css/core/, js/core/       # çekirdek (giriş noktası, kabuk, motor)
 │   │   └── js/scenes.js, js/sims/, css/theme.css, css/sims/, assets/, sources.md  # örnek deste (başlangıç)
-│   └── blog/           # Etkileşimli, animasyonlu blog yazısı altyapısı (klasör şablonu)
+│   ├── blog/           # Etkileşimli, animasyonlu blog yazısı altyapısı (klasör şablonu)
+│   │   ├── manifest.json   # CLI'nin indireceği dosya listesi (core / starter)
+│   │   ├── AGENTS.md       # AI talimatı: konu + görsellerden yazıya iş akışı, bloklar, kontrol listesi
+│   │   ├── index.html, css/core/, js/core/       # çekirdek (giriş noktası, kabuk, motor)
+│   │   └── js/post.js, js/sims/, css/theme.css, css/sims/, assets/, sources.md  # örnek yazı (başlangıç)
+│   └── video/          # Hareketli grafik video altyapısı: tarayıcıda oynar, MP4'e render edilir (klasör şablonu)
 │       ├── manifest.json   # CLI'nin indireceği dosya listesi (core / starter)
-│       ├── AGENTS.md       # AI talimatı: konu + görsellerden yazıya iş akışı, bloklar, kontrol listesi
-│       ├── index.html, css/core/, js/core/       # çekirdek (giriş noktası, kabuk, motor)
-│       └── js/post.js, js/sims/, css/theme.css, css/sims/, assets/, sources.md  # örnek yazı (başlangıç)
+│       ├── AGENTS.md       # AI talimatı: brief → fikir → storyboard → film, hareket API'si, kontrol listesi
+│       ├── index.html, css/core/, js/core/       # çekirdek (sahne, oynatıcı, hareket API'si, GSAP)
+│       └── js/film.js, css/theme.css, assets/, sources.md  # örnek film (başlangıç)
 ├── README.md           # Depo kullanım rehberi (Bu dosya)
 └── LICENSE
 ```
@@ -52,6 +57,7 @@ Bu komut önce **ne yapmak istediğinizi** sorar:
 - **Uygulama:** Ardından proje şablonunu (web, landing, mobile, backend) seçersiniz; ilgili kurallar `AGENTS.md` olarak iner.
 - **Sunum:** Sunum altyapısının tamamı (çekirdek dosyalar, `AGENTS.md` ve çalışan bir örnek deste) bulunduğunuz klasöre iner.
 - **Blog:** Blog altyapısının tamamı (çekirdek dosyalar, `AGENTS.md` ve çalışan bir örnek yazı) bulunduğunuz klasöre iner.
+- **Video:** Video altyapısının tamamı (çekirdek dosyalar, `AGENTS.md` ve çalışan bir örnek film) bulunduğunuz klasöre iner.
 
 ### 2. Doğrudan Şablon Belirterek Kurulum
 ```bash
@@ -66,6 +72,9 @@ npx prosicht init -t presentation
 
 # Blog için
 npx prosicht init -t blog
+
+# Video için
+npx prosicht init -t video
 ```
 ### 3. Mevcut Projedeki Kuralları Güncelleme
 Depodaki kurallar güncellendiğinde, projenizdeki AGENTS.md dosyasını en son sürüme çekmek için:
@@ -73,7 +82,7 @@ Depodaki kurallar güncellendiğinde, projenizdeki AGENTS.md dosyasını en son 
 ```
 npx prosicht update -t web
 ```
-`-t` verilmezse şablon, `AGENTS.md` başındaki `<!-- template: ... -->` etiketinden otomatik tespit edilir. Sunum klasörlerinde `update` yalnızca çekirdek dosyaları (`index.html`, `css/core/`, `js/core/`, `AGENTS.md`) yeniler; `js/scenes.js`, `js/sims/`, `css/theme.css`, `css/sims/`, `assets/` ve `sources.md` dokunulmadan kalır. Blog klasörlerinde de yalnızca çekirdek yenilenir; `js/post.js`, `js/sims/`, `css/theme.css`, `css/sims/`, `assets/` ve `sources.md` dokunulmadan kalır. Eski (1.x) klasör yapısındaki sunumlar `update` sırasında onayla yeni yapıya taşınır. Sunum ve blog aynı çekirdek yollarını kullandığı için CLI, bir kitin klasörüne diğerini yazmadan önce onay ister.
+`-t` verilmezse şablon, `AGENTS.md` başındaki `<!-- template: ... -->` etiketinden otomatik tespit edilir. Sunum klasörlerinde `update` yalnızca çekirdek dosyaları (`index.html`, `css/core/`, `js/core/`, `AGENTS.md`) yeniler; `js/scenes.js`, `js/sims/`, `css/theme.css`, `css/sims/`, `assets/` ve `sources.md` dokunulmadan kalır. Blog klasörlerinde de yalnızca çekirdek yenilenir; `js/post.js`, `js/sims/`, `css/theme.css`, `css/sims/`, `assets/` ve `sources.md` dokunulmadan kalır. Eski (1.x) klasör yapısındaki sunumlar `update` sırasında onayla yeni yapıya taşınır. Video klasörlerinde de yalnızca çekirdek yenilenir; `js/film.js`, `css/theme.css`, `assets/` ve `sources.md` dokunulmadan kalır. Sunum, blog ve video aynı çekirdek yollarını kullandığı için CLI, bir kitin klasörüne diğerini yazmadan önce onay ister.
 
 ## Sunum Altyapısı
 Konu verildiğinde AI'ın animasyonlu, etkileşimli bir tarayıcı sunumu hazırlaması için kullanılır. Framework, derleme ve npm bağımlılığı yoktur; çıktı statik dosyalardır.
@@ -135,6 +144,27 @@ Kabuk; okuma ilerleme çubuğunu, kalan okuma süresini, içindekiler tablosunu 
 | Dosyalar | `assets/` (görseller, fontlar, veri, medya) | Yazıya ait |
 
 Yazılar da varsayılan olarak **açık tonlarda** hazırlanır (koyu tema: `post.theme = 'dark'`). Yayınlama sunumla aynıdır; key panelde **Yeni ekle** → **Blog yazısı** ile alınır, sonra `npx prosicht publish` → **Blog**. Panel blog yazılarını sunumlardan ayrı türde tutar: sunum olarak yayınlanmış bir kaydın keyiyle blog yayınlanamaz.
+## Video Altyapısı
+Konu, doküman ya da marka malzemesi verildiğinde AI'ın hareketli grafik bir tanıtım videosu hazırlaması için kullanılır. Film HTML, CSS ve tek bir GSAP zaman çizelgesidir: tarayıcıda oynatıcıyla oynar, `npx prosicht render` ile MP4'e (HyperFrames) render edilir. Her kare zamana bağlı olduğu için ikisi aynı sonucu verir.
+
+```bash
+mkdir yeni-video && cd yeni-video
+npx prosicht init -t video
+python3 -m http.server 8000      # http://localhost:8000 (örnek film)
+npx prosicht render              # assets/video.mp4
+npx prosicht publish             # deck.prosicht.com üzerinde yayın
+```
+
+AI aracına tek cümle yeterlidir: *"Neurox için 30 saniyelik tanıtım videosu hazırla."* AI, `AGENTS.md` içindeki akışı izler: brief → fikir → storyboard (`sources.md`) → film (`js/film.js`, `css/theme.css`) → kontrol → render → yayın. Müzik `film.music` ile eklenir ve MP4'e karışır.
+
+| Katman | Dosyalar | Sahiplik |
+|--------|----------|----------|
+| Sahne, oynatıcı, hareket API'si | `index.html`, `css/core/player.css`, `js/core/app.js`, `js/core/motion.js`, `js/core/vendor/gsap.min.js` | Çekirdek: `update` ile yenilenir |
+| Film | `js/film.js` (ayarlar, sahne HTML'i, zaman çizelgesi), `css/theme.css`, `sources.md` | Filme ait |
+| Dosyalar | `assets/` (görseller, müzik, fontlar; render sonrası `assets/video.mp4`) | Filme ait |
+
+Deck bağlayıcısıyla (Claude, ChatGPT) `create_video` aracı aynı kiti kullanır; orada render yapılmaz, film tarayıcıda oynar. GSAP, GreenSock'un ücretsiz Standard lisansıyla gelir.
+
 ## Şablon Ekleme ve Güncelleme Kuralları (Maintainer'lar İçin)
 Token Verimliliği: Şablon dosyaları (templates/*.md) yazılırken AI modellerinin token sınırları düşünülerek net, emir kipiyle yazılmış ve hiyerarşik Markdown formatı kullanılmalıdır.
 

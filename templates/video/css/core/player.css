@@ -1,0 +1,240 @@
+/* Pro Sicht video kit: stage and player (core, do not edit). Film styles go in css/theme.css. */
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+}
+
+body {
+  overflow: hidden;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* the stage: always laid out at the film's own size (1920×1080), scaled by the player */
+#film {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  transform-origin: 0 0;
+  background: #000;
+}
+
+body.pv-render #film {
+  position: relative;
+  transform: none !important;
+}
+
+/* building blocks every film uses */
+#film .scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+#film .cam {
+  position: absolute;
+  inset: 0;
+}
+
+#film .fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* words split by M.words() */
+#film .w {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ---------------- player ---------------- */
+
+.pv-player #film {
+  cursor: pointer;
+}
+
+.pv-ui {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  color: #fff;
+  font: 500 14px/1 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.pv-ui svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.pv-big {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 88px;
+  height: 88px;
+  margin: -44px 0 0 -44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(10, 14, 20, 0.62);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+.pv-big svg {
+  width: 40px;
+  height: 40px;
+}
+
+.pv-big:hover {
+  transform: scale(1.06);
+}
+
+.pv-playing .pv-big {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pv-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 16px 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+  pointer-events: auto;
+  transition: opacity 0.25s ease;
+}
+
+.pv-idle .pv-bar,
+.pv-idle .pv-ui {
+  opacity: 0;
+}
+
+.pv-idle {
+  cursor: none;
+}
+
+.pv-btn {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  font: 600 12px/1 system-ui, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.pv-btn:hover,
+.pv-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  outline: none;
+}
+
+.pv-btn[hidden] {
+  display: none;
+}
+
+.pv-time {
+  flex: none;
+  min-width: 84px;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+.pv-seek {
+  flex: 1;
+  min-width: 60px;
+  height: 24px;
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  --p: 0%;
+}
+
+.pv-seek::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #fff var(--p), rgba(255, 255, 255, 0.3) var(--p));
+}
+
+.pv-seek::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #fff var(--p), rgba(255, 255, 255, 0.3) var(--p));
+}
+
+.pv-seek::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.pv-seek::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.pv-error {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  top: 16px;
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #3b0d0d;
+  color: #ffd7d7;
+  font: 13px/1.5 ui-monospace, Menlo, monospace;
+  white-space: pre-wrap;
+  z-index: 10;
+}
+
+@media (max-width: 560px) {
+  .pv-time {
+    min-width: 0;
+    font-size: 12px;
+  }
+
+  .pv-bar {
+    gap: 4px;
+    padding: 20px 8px 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pv-big,
+  .pv-bar {
+    transition: none;
+  }
+}

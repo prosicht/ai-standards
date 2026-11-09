@@ -1,0 +1,148 @@
+/* Film look: colours, fonts and scene styles (FILM-OWNED). The stage is 1920×1080 px. */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap");
+
+:root {
+  --ink: #f2f7f6;
+  --ink-soft: #a9c4c0;
+  --deep: #062a33;
+  --ground: #0c4a5b;
+  --accent: #14b58a;
+  --paper: #f3f6f5;
+  --paper-ink: #0c2a31;
+  --display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --body: "Inter", system-ui, sans-serif;
+}
+
+#film {
+  background: var(--deep);
+  color: var(--ink);
+  font-family: var(--body);
+}
+
+.dark {
+  background: radial-gradient(120% 90% at 50% 40%, var(--ground) 0%, var(--deep) 70%);
+}
+
+.light {
+  background: var(--paper);
+  color: var(--paper-ink);
+}
+
+.glow {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 1400px;
+  height: 900px;
+  margin: -450px 0 0 -700px;
+  background: radial-gradient(closest-side, rgba(20, 181, 138, 0.22), rgba(20, 181, 138, 0));
+}
+
+.headline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 440px;
+  margin: 0;
+  text-align: center;
+  font: 600 112px/1.05 var(--display);
+  letter-spacing: -0.02em;
+}
+
+.headline em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.track {
+  position: absolute;
+  left: 360px;
+  top: 360px;
+  width: 1200px;
+  height: 150px;
+  border-radius: 20px;
+  background: #e2e9e7;
+}
+
+.clip {
+  position: absolute;
+  top: 25px;
+  height: 100px;
+  border-radius: 14px;
+  background: var(--ground);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  font: 600 38px/1 var(--display);
+}
+
+.clip:nth-child(1) { left: 24px; width: 330px; }
+.clip:nth-child(2) { left: 370px; width: 470px; background: var(--accent); color: var(--paper-ink); }
+.clip:nth-child(3) { left: 856px; width: 320px; }
+
+.playhead {
+  position: absolute;
+  left: 10px;
+  top: -24px;
+  width: 4px;
+  height: 198px;
+  border-radius: 2px;
+  background: #e2483d;
+}
+
+.frames {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 560px;
+  margin: 0;
+  text-align: center;
+  font: 600 64px/1 var(--display);
+  font-variant-numeric: tabular-nums;
+}
+
+.line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 700px;
+  margin: 0;
+  text-align: center;
+  font: 500 56px/1.2 var(--display);
+}
+
+.line code {
+  font: 500 50px/1 ui-monospace, Menlo, monospace;
+  color: var(--accent);
+}
+
+.giant {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 300px;
+  margin: 0;
+  text-align: center;
+  font: 700 300px/1 var(--display);
+  letter-spacing: -0.04em;
+}
+
+#s3 .line {
+  top: 680px;
+}
+
+.mark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 500px;
+  margin: 0;
+  text-align: center;
+  font: 500 64px/1 var(--display);
+  color: var(--ink-soft);
+}
+
+.mark strong {
+  color: var(--ink);
+  font-weight: 700;
+}
